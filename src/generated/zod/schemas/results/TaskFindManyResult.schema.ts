@@ -1,0 +1,38 @@
+import * as z from 'zod';
+export const TaskFindManyResultSchema = z.object({
+  data: z.array(z.object({
+  id: z.string(),
+  groupId: z.string(),
+  projectId: z.string(),
+  title: z.string(),
+  desc: z.string().optional(),
+  status: z.string().optional(),
+  deadline: z.date().optional(),
+  createdAt: z.date().optional(),
+  startReminderSentAt: z.date().optional(),
+  fullAddress: z.string().optional(),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
+  isPickUp: z.boolean().optional(),
+  accepted: z.boolean().optional(),
+  hanging: z.boolean().optional(),
+  assignedUserId: z.string().optional(),
+  assignedUserId2: z.string().optional(),
+  submittedUserId: z.string().optional(),
+  project: z.unknown(),
+  comments: z.array(z.unknown()),
+  fields: z.array(z.unknown()),
+  inspections: z.array(z.unknown()),
+  portaChecklist: z.unknown().optional(),
+  libra: z.unknown().optional(),
+  events: z.array(z.unknown())
+})),
+  pagination: z.object({
+  page: z.number().int().min(1),
+  pageSize: z.number().int().min(1),
+  total: z.number().int().min(0),
+  totalPages: z.number().int().min(0),
+  hasNext: z.boolean(),
+  hasPrev: z.boolean()
+})
+});

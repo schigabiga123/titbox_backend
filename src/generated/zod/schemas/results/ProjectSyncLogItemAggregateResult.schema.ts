@@ -1,0 +1,66 @@
+import * as z from 'zod';
+export const ProjectSyncLogItemAggregateResultSchema = z.object({  _count: z.object({
+    id: z.number(),
+    createdAt: z.number(),
+    syncLogId: z.number(),
+    projectId: z.number(),
+    pocketProjectId: z.number(),
+    projectTitle: z.number(),
+    success: z.number(),
+    skipped: z.number(),
+    skippedReason: z.number(),
+    createdProjects: z.number(),
+    updatedProjects: z.number(),
+    createdTasks: z.number(),
+    updatedTasks: z.number(),
+    updatedTaskFields: z.number(),
+    skippedTaskSync: z.number(),
+    errorMessage: z.number(),
+    changeDetails: z.number(),
+    syncLog: z.number(),
+    project: z.number()
+  }).optional(),
+  _sum: z.object({
+    createdProjects: z.number().nullable(),
+    updatedProjects: z.number().nullable(),
+    createdTasks: z.number().nullable(),
+    updatedTasks: z.number().nullable(),
+    updatedTaskFields: z.number().nullable()
+  }).nullable().optional(),
+  _avg: z.object({
+    createdProjects: z.number().nullable(),
+    updatedProjects: z.number().nullable(),
+    createdTasks: z.number().nullable(),
+    updatedTasks: z.number().nullable(),
+    updatedTaskFields: z.number().nullable()
+  }).nullable().optional(),
+  _min: z.object({
+    id: z.string().nullable(),
+    createdAt: z.date().nullable(),
+    syncLogId: z.string().nullable(),
+    projectId: z.string().nullable(),
+    pocketProjectId: z.string().nullable(),
+    projectTitle: z.string().nullable(),
+    skippedReason: z.string().nullable(),
+    createdProjects: z.number().int().nullable(),
+    updatedProjects: z.number().int().nullable(),
+    createdTasks: z.number().int().nullable(),
+    updatedTasks: z.number().int().nullable(),
+    updatedTaskFields: z.number().int().nullable(),
+    errorMessage: z.string().nullable()
+  }).nullable().optional(),
+  _max: z.object({
+    id: z.string().nullable(),
+    createdAt: z.date().nullable(),
+    syncLogId: z.string().nullable(),
+    projectId: z.string().nullable(),
+    pocketProjectId: z.string().nullable(),
+    projectTitle: z.string().nullable(),
+    skippedReason: z.string().nullable(),
+    createdProjects: z.number().int().nullable(),
+    updatedProjects: z.number().int().nullable(),
+    createdTasks: z.number().int().nullable(),
+    updatedTasks: z.number().int().nullable(),
+    updatedTaskFields: z.number().int().nullable(),
+    errorMessage: z.string().nullable()
+  }).nullable().optional()});

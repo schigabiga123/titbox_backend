@@ -1,0 +1,10 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { ProjectSyncLogItemOrderByWithRelationInputObjectSchema as ProjectSyncLogItemOrderByWithRelationInputObjectSchema } from './objects/ProjectSyncLogItemOrderByWithRelationInput.schema';
+import { ProjectSyncLogItemWhereInputObjectSchema as ProjectSyncLogItemWhereInputObjectSchema } from './objects/ProjectSyncLogItemWhereInput.schema';
+import { ProjectSyncLogItemWhereUniqueInputObjectSchema as ProjectSyncLogItemWhereUniqueInputObjectSchema } from './objects/ProjectSyncLogItemWhereUniqueInput.schema';
+import { ProjectSyncLogItemCountAggregateInputObjectSchema as ProjectSyncLogItemCountAggregateInputObjectSchema } from './objects/ProjectSyncLogItemCountAggregateInput.schema';
+
+export const ProjectSyncLogItemCountSchema: z.ZodType<Prisma.ProjectSyncLogItemCountArgs> = z.object({ orderBy: z.union([ProjectSyncLogItemOrderByWithRelationInputObjectSchema, ProjectSyncLogItemOrderByWithRelationInputObjectSchema.array()]).optional(), where: ProjectSyncLogItemWhereInputObjectSchema.optional(), cursor: ProjectSyncLogItemWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), select: z.union([ z.literal(true), ProjectSyncLogItemCountAggregateInputObjectSchema ]).optional() }).strict() as unknown as z.ZodType<Prisma.ProjectSyncLogItemCountArgs>;
+
+export const ProjectSyncLogItemCountZodSchema = z.object({ orderBy: z.union([ProjectSyncLogItemOrderByWithRelationInputObjectSchema, ProjectSyncLogItemOrderByWithRelationInputObjectSchema.array()]).optional(), where: ProjectSyncLogItemWhereInputObjectSchema.optional(), cursor: ProjectSyncLogItemWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), select: z.union([ z.literal(true), ProjectSyncLogItemCountAggregateInputObjectSchema ]).optional() }).strict();

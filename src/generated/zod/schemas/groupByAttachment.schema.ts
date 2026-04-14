@@ -1,0 +1,13 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { AttachmentWhereInputObjectSchema as AttachmentWhereInputObjectSchema } from './objects/AttachmentWhereInput.schema';
+import { AttachmentOrderByWithAggregationInputObjectSchema as AttachmentOrderByWithAggregationInputObjectSchema } from './objects/AttachmentOrderByWithAggregationInput.schema';
+import { AttachmentScalarWhereWithAggregatesInputObjectSchema as AttachmentScalarWhereWithAggregatesInputObjectSchema } from './objects/AttachmentScalarWhereWithAggregatesInput.schema';
+import { AttachmentScalarFieldEnumSchema } from './enums/AttachmentScalarFieldEnum.schema';
+import { AttachmentCountAggregateInputObjectSchema as AttachmentCountAggregateInputObjectSchema } from './objects/AttachmentCountAggregateInput.schema';
+import { AttachmentMinAggregateInputObjectSchema as AttachmentMinAggregateInputObjectSchema } from './objects/AttachmentMinAggregateInput.schema';
+import { AttachmentMaxAggregateInputObjectSchema as AttachmentMaxAggregateInputObjectSchema } from './objects/AttachmentMaxAggregateInput.schema';
+
+export const AttachmentGroupBySchema: z.ZodType<Prisma.AttachmentGroupByArgs> = z.object({ where: AttachmentWhereInputObjectSchema.optional(), orderBy: z.union([AttachmentOrderByWithAggregationInputObjectSchema, AttachmentOrderByWithAggregationInputObjectSchema.array()]).optional(), having: AttachmentScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(AttachmentScalarFieldEnumSchema), _count: z.union([ z.literal(true), AttachmentCountAggregateInputObjectSchema ]).optional(), _min: AttachmentMinAggregateInputObjectSchema.optional(), _max: AttachmentMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.AttachmentGroupByArgs>;
+
+export const AttachmentGroupByZodSchema = z.object({ where: AttachmentWhereInputObjectSchema.optional(), orderBy: z.union([AttachmentOrderByWithAggregationInputObjectSchema, AttachmentOrderByWithAggregationInputObjectSchema.array()]).optional(), having: AttachmentScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(AttachmentScalarFieldEnumSchema), _count: z.union([ z.literal(true), AttachmentCountAggregateInputObjectSchema ]).optional(), _min: AttachmentMinAggregateInputObjectSchema.optional(), _max: AttachmentMaxAggregateInputObjectSchema.optional() }).strict();

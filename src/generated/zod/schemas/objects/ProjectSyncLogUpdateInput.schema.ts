@@ -1,0 +1,33 @@
+import * as z from 'zod';
+import type { Prisma } from '@prisma/client';
+import { StringFieldUpdateOperationsInputObjectSchema as StringFieldUpdateOperationsInputObjectSchema } from './StringFieldUpdateOperationsInput.schema';
+import { DateTimeFieldUpdateOperationsInputObjectSchema as DateTimeFieldUpdateOperationsInputObjectSchema } from './DateTimeFieldUpdateOperationsInput.schema';
+import { BoolFieldUpdateOperationsInputObjectSchema as BoolFieldUpdateOperationsInputObjectSchema } from './BoolFieldUpdateOperationsInput.schema';
+import { NullableStringFieldUpdateOperationsInputObjectSchema as NullableStringFieldUpdateOperationsInputObjectSchema } from './NullableStringFieldUpdateOperationsInput.schema';
+import { IntFieldUpdateOperationsInputObjectSchema as IntFieldUpdateOperationsInputObjectSchema } from './IntFieldUpdateOperationsInput.schema';
+import { ProjectUpdateOneWithoutSyncLogsNestedInputObjectSchema as ProjectUpdateOneWithoutSyncLogsNestedInputObjectSchema } from './ProjectUpdateOneWithoutSyncLogsNestedInput.schema';
+import { ProjectSyncLogItemUpdateManyWithoutSyncLogNestedInputObjectSchema as ProjectSyncLogItemUpdateManyWithoutSyncLogNestedInputObjectSchema } from './ProjectSyncLogItemUpdateManyWithoutSyncLogNestedInput.schema'
+
+const makeSchema = () => z.object({
+  id: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)]).optional(),
+  createdAt: z.union([z.coerce.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)]).optional(),
+  startedAt: z.union([z.coerce.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)]).optional(),
+  finishedAt: z.union([z.coerce.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)]).optional(),
+  success: z.union([z.boolean(), z.lazy(() => BoolFieldUpdateOperationsInputObjectSchema)]).optional(),
+  runnerName: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)]).optional(),
+  scheduleType: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)]).optional(),
+  selectedProjectTitle: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
+  processedProjects: z.union([z.number().int(), z.lazy(() => IntFieldUpdateOperationsInputObjectSchema)]).optional(),
+  createdProjects: z.union([z.number().int(), z.lazy(() => IntFieldUpdateOperationsInputObjectSchema)]).optional(),
+  updatedProjects: z.union([z.number().int(), z.lazy(() => IntFieldUpdateOperationsInputObjectSchema)]).optional(),
+  createdTasks: z.union([z.number().int(), z.lazy(() => IntFieldUpdateOperationsInputObjectSchema)]).optional(),
+  updatedTasks: z.union([z.number().int(), z.lazy(() => IntFieldUpdateOperationsInputObjectSchema)]).optional(),
+  updatedTaskFields: z.union([z.number().int(), z.lazy(() => IntFieldUpdateOperationsInputObjectSchema)]).optional(),
+  skippedProjects: z.union([z.number().int(), z.lazy(() => IntFieldUpdateOperationsInputObjectSchema)]).optional(),
+  skippedTaskSyncProjects: z.union([z.number().int(), z.lazy(() => IntFieldUpdateOperationsInputObjectSchema)]).optional(),
+  errorMessage: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
+  project: z.lazy(() => ProjectUpdateOneWithoutSyncLogsNestedInputObjectSchema).optional(),
+  items: z.lazy(() => ProjectSyncLogItemUpdateManyWithoutSyncLogNestedInputObjectSchema).optional()
+}).strict();
+export const ProjectSyncLogUpdateInputObjectSchema: z.ZodType<Prisma.ProjectSyncLogUpdateInput> = makeSchema() as unknown as z.ZodType<Prisma.ProjectSyncLogUpdateInput>;
+export const ProjectSyncLogUpdateInputObjectZodSchema = makeSchema();

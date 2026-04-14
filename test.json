@@ -1,0 +1,36 @@
+{
+  "roles": "string", // itt milyen mezők lehetnek?
+  "type": "ENTRY", // kilépés esetén mi az érték?
+  "direction": "ENTRY", // kilépés esetén mi az érték?
+  "resourceType": "TIT", //Ez mindig TIT?
+  "towId": 101, //Ezt honnan kell szedni?
+  "trailerId": 202, //OK
+  "loadFl": true, // Ez mindig true?
+  "measuredWeight": 15500, //Ha kilépés van Titboxban nincsen mérés. Lehet null kilépésnél?
+  "measuredGrossWeight": 15600, //Ha kilépés van Titboxban nincsen mérés. Lehet null kilépésnél?
+  "weightCompensation": 100, //Ez milyen adat?
+  "sealType": "S", //Ez mindig S? Ha nem, honnan lehet tudni az értéket?
+  "sealNumber": "S123456", //Ezt az értéket honnan lehet tudni?
+  "numOfRatchet": 5, //Ezt az értéket honnan lehet tudni?
+  "arrivalTime": "2026-03-29T17:31:30.412Z", // OK
+  "departureTime": "2026-03-29T17:31:30.412Z", // OK
+  "keyTakeoverTime": "2026-03-29T17:31:30.412Z", //Ezt az értéket honnan lehet tudni?
+  "driver1Id": 301, //OK
+  "driver2Id": 302, //OK
+  "note": "Normál szállítás", //Ezt az értéket honnan lehet tudni?
+  "gateNumber": 1, // Kilépés esetén 1, belépés esetén 2 az érték?
+  "breathalyzerState1": "NEGATIVE", //Ezt az értéket honnan lehet tudni?
+  "breathalyzerState2": "NEGATIVE", //Ezt az értéket honnan lehet tudni?
+  "regNumsReadyFl": true, //Ezt az értéket honnan lehet tudni?
+  "regNumsReadyByControlFl": true, //Ezt az értéket honnan lehet tudni?
+  "withoutTrailerFl": false, //Ezt az értéket honnan lehet tudni?
+  "checkState": "OK", //Ez mindig OK?
+  "declarationFl": true, //Ezt az értéket honnan lehet tudni?
+  "logisticFl": false, //Ezt az értéket honnan lehet tudni?
+  "linkedGatePassId": 5001, //Ezt az értéket honnan lehet tudni?
+  "doormanId": 1, //Ezt az értéket honnan lehet tudni?
+  "ffIds": [ //Ezt az értéket honnan lehet tudni?
+    123,
+    124
+  ]
+}

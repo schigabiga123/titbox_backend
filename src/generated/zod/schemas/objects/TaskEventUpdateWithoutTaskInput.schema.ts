@@ -1,0 +1,15 @@
+import * as z from 'zod';
+import type { Prisma } from '@prisma/client';
+import { StringFieldUpdateOperationsInputObjectSchema as StringFieldUpdateOperationsInputObjectSchema } from './StringFieldUpdateOperationsInput.schema';
+import { NullableStringFieldUpdateOperationsInputObjectSchema as NullableStringFieldUpdateOperationsInputObjectSchema } from './NullableStringFieldUpdateOperationsInput.schema';
+import { NullableDateTimeFieldUpdateOperationsInputObjectSchema as NullableDateTimeFieldUpdateOperationsInputObjectSchema } from './NullableDateTimeFieldUpdateOperationsInput.schema';
+import { TaskEventFieldUpdateManyWithoutTaskEventNestedInputObjectSchema as TaskEventFieldUpdateManyWithoutTaskEventNestedInputObjectSchema } from './TaskEventFieldUpdateManyWithoutTaskEventNestedInput.schema'
+
+const makeSchema = () => z.object({
+  id: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)]).optional(),
+  name: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
+  createdAt: z.union([z.coerce.date(), z.lazy(() => NullableDateTimeFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
+  fields: z.lazy(() => TaskEventFieldUpdateManyWithoutTaskEventNestedInputObjectSchema).optional()
+}).strict();
+export const TaskEventUpdateWithoutTaskInputObjectSchema: z.ZodType<Prisma.TaskEventUpdateWithoutTaskInput> = makeSchema() as unknown as z.ZodType<Prisma.TaskEventUpdateWithoutTaskInput>;
+export const TaskEventUpdateWithoutTaskInputObjectZodSchema = makeSchema();

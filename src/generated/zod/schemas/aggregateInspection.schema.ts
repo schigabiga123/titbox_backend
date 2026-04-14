@@ -1,0 +1,12 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { InspectionOrderByWithRelationInputObjectSchema as InspectionOrderByWithRelationInputObjectSchema } from './objects/InspectionOrderByWithRelationInput.schema';
+import { InspectionWhereInputObjectSchema as InspectionWhereInputObjectSchema } from './objects/InspectionWhereInput.schema';
+import { InspectionWhereUniqueInputObjectSchema as InspectionWhereUniqueInputObjectSchema } from './objects/InspectionWhereUniqueInput.schema';
+import { InspectionCountAggregateInputObjectSchema as InspectionCountAggregateInputObjectSchema } from './objects/InspectionCountAggregateInput.schema';
+import { InspectionMinAggregateInputObjectSchema as InspectionMinAggregateInputObjectSchema } from './objects/InspectionMinAggregateInput.schema';
+import { InspectionMaxAggregateInputObjectSchema as InspectionMaxAggregateInputObjectSchema } from './objects/InspectionMaxAggregateInput.schema';
+
+export const InspectionAggregateSchema: z.ZodType<Prisma.InspectionAggregateArgs> = z.object({ orderBy: z.union([InspectionOrderByWithRelationInputObjectSchema, InspectionOrderByWithRelationInputObjectSchema.array()]).optional(), where: InspectionWhereInputObjectSchema.optional(), cursor: InspectionWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), InspectionCountAggregateInputObjectSchema ]).optional(), _min: InspectionMinAggregateInputObjectSchema.optional(), _max: InspectionMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.InspectionAggregateArgs>;
+
+export const InspectionAggregateZodSchema = z.object({ orderBy: z.union([InspectionOrderByWithRelationInputObjectSchema, InspectionOrderByWithRelationInputObjectSchema.array()]).optional(), where: InspectionWhereInputObjectSchema.optional(), cursor: InspectionWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), InspectionCountAggregateInputObjectSchema ]).optional(), _min: InspectionMinAggregateInputObjectSchema.optional(), _max: InspectionMaxAggregateInputObjectSchema.optional() }).strict();

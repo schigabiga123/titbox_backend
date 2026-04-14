@@ -1,0 +1,12 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { PortaChecklistOrderByWithRelationInputObjectSchema as PortaChecklistOrderByWithRelationInputObjectSchema } from './objects/PortaChecklistOrderByWithRelationInput.schema';
+import { PortaChecklistWhereInputObjectSchema as PortaChecklistWhereInputObjectSchema } from './objects/PortaChecklistWhereInput.schema';
+import { PortaChecklistWhereUniqueInputObjectSchema as PortaChecklistWhereUniqueInputObjectSchema } from './objects/PortaChecklistWhereUniqueInput.schema';
+import { PortaChecklistCountAggregateInputObjectSchema as PortaChecklistCountAggregateInputObjectSchema } from './objects/PortaChecklistCountAggregateInput.schema';
+import { PortaChecklistMinAggregateInputObjectSchema as PortaChecklistMinAggregateInputObjectSchema } from './objects/PortaChecklistMinAggregateInput.schema';
+import { PortaChecklistMaxAggregateInputObjectSchema as PortaChecklistMaxAggregateInputObjectSchema } from './objects/PortaChecklistMaxAggregateInput.schema';
+
+export const PortaChecklistAggregateSchema: z.ZodType<Prisma.PortaChecklistAggregateArgs> = z.object({ orderBy: z.union([PortaChecklistOrderByWithRelationInputObjectSchema, PortaChecklistOrderByWithRelationInputObjectSchema.array()]).optional(), where: PortaChecklistWhereInputObjectSchema.optional(), cursor: PortaChecklistWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), PortaChecklistCountAggregateInputObjectSchema ]).optional(), _min: PortaChecklistMinAggregateInputObjectSchema.optional(), _max: PortaChecklistMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.PortaChecklistAggregateArgs>;
+
+export const PortaChecklistAggregateZodSchema = z.object({ orderBy: z.union([PortaChecklistOrderByWithRelationInputObjectSchema, PortaChecklistOrderByWithRelationInputObjectSchema.array()]).optional(), where: PortaChecklistWhereInputObjectSchema.optional(), cursor: PortaChecklistWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), PortaChecklistCountAggregateInputObjectSchema ]).optional(), _min: PortaChecklistMinAggregateInputObjectSchema.optional(), _max: PortaChecklistMaxAggregateInputObjectSchema.optional() }).strict();

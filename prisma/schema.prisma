@@ -1,0 +1,259 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider = "prisma-zod-generator"
+  output   = "../src/generated/zod"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  partnerName String?
+  pocketId    String?
+  title       String
+  updatedAt   DateTime?
+
+  tasks       Task[]
+  syncLogs    ProjectSyncLog[]
+  syncLogItems ProjectSyncLogItem[]
+}
+
+model ProjectSyncLog {
+  id                    String   @id @default(uuid())
+  createdAt             DateTime @default(now())
+  startedAt             DateTime
+  finishedAt            DateTime
+  success               Boolean
+  runnerName            String
+  scheduleType          String
+  selectedProjectTitle  String?
+  projectId             String?
+  processedProjects     Int      @default(0)
+  createdProjects       Int      @default(0)
+  updatedProjects       Int      @default(0)
+  createdTasks          Int      @default(0)
+  updatedTasks          Int      @default(0)
+  updatedTaskFields     Int      @default(0)
+  skippedProjects       Int      @default(0)
+  skippedTaskSyncProjects Int    @default(0)
+  errorMessage          String?
+
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  items   ProjectSyncLogItem[]
+
+  @@index([createdAt])
+  @@index([projectId])
+  @@index([runnerName])
+  @@index([scheduleType])
+}
+
+model ProjectSyncLogItem {
+  id                     String   @id @default(uuid())
+  createdAt              DateTime @default(now())
+  syncLogId              String
+  projectId              String?
+  pocketProjectId        String?
+  projectTitle           String
+  success                Boolean
+  skipped                Boolean  @default(false)
+  skippedReason          String?
+  createdProjects        Int      @default(0)
+  updatedProjects        Int      @default(0)
+  createdTasks           Int      @default(0)
+  updatedTasks           Int      @default(0)
+  updatedTaskFields      Int      @default(0)
+  skippedTaskSync        Boolean  @default(false)
+  errorMessage           String?
+  changeDetails          Json?
+
+  syncLog ProjectSyncLog @relation(fields: [syncLogId], references: [id], onDelete: Cascade)
+  project Project?       @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([syncLogId])
+  @@index([projectId])
+  @@index([pocketProjectId])
+}
+
+model Task {
+  id                 String   @id @default(uuid())
+  groupId            String
+  projectId          String
+  title              String
+  desc               String?
+  status             String?
+  deadline           DateTime?
+  createdAt          DateTime?
+  startReminderSentAt DateTime?
+  fullAddress        String?
+  lat                Float?
+  lng                Float?
+  isPickUp           Boolean?
+  accepted           Boolean?
+  hanging            Boolean?
+
+  assignedUserId     String?
+  assignedUserId2    String?
+  submittedUserId    String?
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  comments  Comment[]
+  fields    TaskField[]
+  inspections Inspection[]
+  portaChecklist PortaChecklist?
+  libra Libra?
+  events TaskEvent[]
+}
+
+model Comment {
+  id              String   @id @default(uuid())
+  taskId          String
+
+  text            String
+  submittedUserId String?
+  createdAt       DateTime?
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  taggedUsers CommentTaggedUser[]
+  attachments Attachment[]
+}
+
+model CommentTaggedUser {
+  commentId String
+  userId    String
+
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@id([commentId, userId])
+}
+
+model TaskField {
+  id            String   @id @default(uuid())
+  taskId        String
+  pocketId      String?
+  name          String
+  data          String?
+  type          String?
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  attachments Attachment[]
+  libra Libra?
+}
+
+enum AttachmentType {
+  photo
+  file
+}
+
+model Attachment {
+  id          String         @id @default(uuid())
+  url         String
+  type        AttachmentType
+  commentId   String?
+  taskFieldId String?
+  taskEventFieldId String?
+  createdAt   DateTime?      @default(now())
+
+  comment   Comment?   @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  taskField TaskField? @relation(fields: [taskFieldId], references: [id], onDelete: Cascade)
+  taskEventField TaskEventField? @relation(fields: [taskEventFieldId], references: [id], onDelete: Cascade)
+
+  @@index([commentId])
+  @@index([taskFieldId])
+  @@index([taskEventFieldId])
+}
+
+model Inspection {
+  id      String  @id @default(uuid())
+  taskId  String
+  key     String
+  checked Boolean
+  note    String?
+  data    String?
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+}
+
+model PortaChecklist {
+  id               String    @id @default(uuid())
+  taskId           String    @unique
+  isUserChecked    Boolean?
+  isTruckChecked   Boolean?
+  isTrailerChecked Boolean?
+  isTraktorChecked Boolean?
+  isBioChecked     Boolean?
+  isSzondaChecked  Boolean?
+  isStarted        Boolean?
+  startedAt        DateTime?
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model Libra {
+  id                   String    @id @default(uuid())
+  projectId            String
+  taskId               String    @unique
+  szfCode              String?
+  plateNumber          String?
+  assignedUserId       String?
+  amount               Float?
+  manuallyLibra        String?
+  manuallyLibraComment String?
+  taskFieldId          String?   @unique
+
+  task      Task       @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskField TaskField? @relation(fields: [taskFieldId], references: [id], onDelete: SetNull)
+
+  @@index([projectId])
+}
+
+model TaskEvent {
+  id        String   @id @default(uuid())
+  taskId    String
+  name      String?
+  createdAt DateTime?
+
+  task   Task             @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  fields TaskEventField[]
+
+  @@index([taskId])
+}
+
+model TaskEventField {
+  id          String   @id @default(uuid())
+  taskEventId String
+  name        String
+  data        String?
+  type        String?
+
+  taskEvent    TaskEvent     @relation(fields: [taskEventId], references: [id], onDelete: Cascade)
+  attachments  Attachment[]
+
+  @@index([taskEventId])
+}
+
+model AuditLog {
+  id             String   @id @default(uuid())
+  createdAt      DateTime @default(now())
+  success        Boolean
+  method         String
+  path           String
+  routePath      String?
+  responseStatus Int
+  firebaseUid    String?
+  firebaseEmail  String?
+  errorMessage   String?
+  params         Json?
+  query          Json?
+  body           Json?
+  responseBody   Json?
+  resourceId     String?
+}

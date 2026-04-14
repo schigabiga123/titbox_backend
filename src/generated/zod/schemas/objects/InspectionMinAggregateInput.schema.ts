@@ -1,0 +1,14 @@
+import * as z from 'zod';
+import type { Prisma } from '@prisma/client';
+
+
+const makeSchema = () => z.object({
+  id: z.literal(true).optional(),
+  taskId: z.literal(true).optional(),
+  key: z.literal(true).optional(),
+  checked: z.literal(true).optional(),
+  note: z.literal(true).optional(),
+  data: z.literal(true).optional()
+}).strict();
+export const InspectionMinAggregateInputObjectSchema: z.ZodType<Prisma.InspectionMinAggregateInputType> = makeSchema() as unknown as z.ZodType<Prisma.InspectionMinAggregateInputType>;
+export const InspectionMinAggregateInputObjectZodSchema = makeSchema();

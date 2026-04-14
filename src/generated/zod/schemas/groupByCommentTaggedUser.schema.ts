@@ -1,0 +1,13 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { CommentTaggedUserWhereInputObjectSchema as CommentTaggedUserWhereInputObjectSchema } from './objects/CommentTaggedUserWhereInput.schema';
+import { CommentTaggedUserOrderByWithAggregationInputObjectSchema as CommentTaggedUserOrderByWithAggregationInputObjectSchema } from './objects/CommentTaggedUserOrderByWithAggregationInput.schema';
+import { CommentTaggedUserScalarWhereWithAggregatesInputObjectSchema as CommentTaggedUserScalarWhereWithAggregatesInputObjectSchema } from './objects/CommentTaggedUserScalarWhereWithAggregatesInput.schema';
+import { CommentTaggedUserScalarFieldEnumSchema } from './enums/CommentTaggedUserScalarFieldEnum.schema';
+import { CommentTaggedUserCountAggregateInputObjectSchema as CommentTaggedUserCountAggregateInputObjectSchema } from './objects/CommentTaggedUserCountAggregateInput.schema';
+import { CommentTaggedUserMinAggregateInputObjectSchema as CommentTaggedUserMinAggregateInputObjectSchema } from './objects/CommentTaggedUserMinAggregateInput.schema';
+import { CommentTaggedUserMaxAggregateInputObjectSchema as CommentTaggedUserMaxAggregateInputObjectSchema } from './objects/CommentTaggedUserMaxAggregateInput.schema';
+
+export const CommentTaggedUserGroupBySchema: z.ZodType<Prisma.CommentTaggedUserGroupByArgs> = z.object({ where: CommentTaggedUserWhereInputObjectSchema.optional(), orderBy: z.union([CommentTaggedUserOrderByWithAggregationInputObjectSchema, CommentTaggedUserOrderByWithAggregationInputObjectSchema.array()]).optional(), having: CommentTaggedUserScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(CommentTaggedUserScalarFieldEnumSchema), _count: z.union([ z.literal(true), CommentTaggedUserCountAggregateInputObjectSchema ]).optional(), _min: CommentTaggedUserMinAggregateInputObjectSchema.optional(), _max: CommentTaggedUserMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.CommentTaggedUserGroupByArgs>;
+
+export const CommentTaggedUserGroupByZodSchema = z.object({ where: CommentTaggedUserWhereInputObjectSchema.optional(), orderBy: z.union([CommentTaggedUserOrderByWithAggregationInputObjectSchema, CommentTaggedUserOrderByWithAggregationInputObjectSchema.array()]).optional(), having: CommentTaggedUserScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(CommentTaggedUserScalarFieldEnumSchema), _count: z.union([ z.literal(true), CommentTaggedUserCountAggregateInputObjectSchema ]).optional(), _min: CommentTaggedUserMinAggregateInputObjectSchema.optional(), _max: CommentTaggedUserMaxAggregateInputObjectSchema.optional() }).strict();

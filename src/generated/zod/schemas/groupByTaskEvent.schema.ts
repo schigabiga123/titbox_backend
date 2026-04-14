@@ -1,0 +1,13 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { TaskEventWhereInputObjectSchema as TaskEventWhereInputObjectSchema } from './objects/TaskEventWhereInput.schema';
+import { TaskEventOrderByWithAggregationInputObjectSchema as TaskEventOrderByWithAggregationInputObjectSchema } from './objects/TaskEventOrderByWithAggregationInput.schema';
+import { TaskEventScalarWhereWithAggregatesInputObjectSchema as TaskEventScalarWhereWithAggregatesInputObjectSchema } from './objects/TaskEventScalarWhereWithAggregatesInput.schema';
+import { TaskEventScalarFieldEnumSchema } from './enums/TaskEventScalarFieldEnum.schema';
+import { TaskEventCountAggregateInputObjectSchema as TaskEventCountAggregateInputObjectSchema } from './objects/TaskEventCountAggregateInput.schema';
+import { TaskEventMinAggregateInputObjectSchema as TaskEventMinAggregateInputObjectSchema } from './objects/TaskEventMinAggregateInput.schema';
+import { TaskEventMaxAggregateInputObjectSchema as TaskEventMaxAggregateInputObjectSchema } from './objects/TaskEventMaxAggregateInput.schema';
+
+export const TaskEventGroupBySchema: z.ZodType<Prisma.TaskEventGroupByArgs> = z.object({ where: TaskEventWhereInputObjectSchema.optional(), orderBy: z.union([TaskEventOrderByWithAggregationInputObjectSchema, TaskEventOrderByWithAggregationInputObjectSchema.array()]).optional(), having: TaskEventScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(TaskEventScalarFieldEnumSchema), _count: z.union([ z.literal(true), TaskEventCountAggregateInputObjectSchema ]).optional(), _min: TaskEventMinAggregateInputObjectSchema.optional(), _max: TaskEventMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.TaskEventGroupByArgs>;
+
+export const TaskEventGroupByZodSchema = z.object({ where: TaskEventWhereInputObjectSchema.optional(), orderBy: z.union([TaskEventOrderByWithAggregationInputObjectSchema, TaskEventOrderByWithAggregationInputObjectSchema.array()]).optional(), having: TaskEventScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(TaskEventScalarFieldEnumSchema), _count: z.union([ z.literal(true), TaskEventCountAggregateInputObjectSchema ]).optional(), _min: TaskEventMinAggregateInputObjectSchema.optional(), _max: TaskEventMaxAggregateInputObjectSchema.optional() }).strict();

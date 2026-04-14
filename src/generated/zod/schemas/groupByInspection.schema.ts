@@ -1,0 +1,13 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { InspectionWhereInputObjectSchema as InspectionWhereInputObjectSchema } from './objects/InspectionWhereInput.schema';
+import { InspectionOrderByWithAggregationInputObjectSchema as InspectionOrderByWithAggregationInputObjectSchema } from './objects/InspectionOrderByWithAggregationInput.schema';
+import { InspectionScalarWhereWithAggregatesInputObjectSchema as InspectionScalarWhereWithAggregatesInputObjectSchema } from './objects/InspectionScalarWhereWithAggregatesInput.schema';
+import { InspectionScalarFieldEnumSchema } from './enums/InspectionScalarFieldEnum.schema';
+import { InspectionCountAggregateInputObjectSchema as InspectionCountAggregateInputObjectSchema } from './objects/InspectionCountAggregateInput.schema';
+import { InspectionMinAggregateInputObjectSchema as InspectionMinAggregateInputObjectSchema } from './objects/InspectionMinAggregateInput.schema';
+import { InspectionMaxAggregateInputObjectSchema as InspectionMaxAggregateInputObjectSchema } from './objects/InspectionMaxAggregateInput.schema';
+
+export const InspectionGroupBySchema: z.ZodType<Prisma.InspectionGroupByArgs> = z.object({ where: InspectionWhereInputObjectSchema.optional(), orderBy: z.union([InspectionOrderByWithAggregationInputObjectSchema, InspectionOrderByWithAggregationInputObjectSchema.array()]).optional(), having: InspectionScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(InspectionScalarFieldEnumSchema), _count: z.union([ z.literal(true), InspectionCountAggregateInputObjectSchema ]).optional(), _min: InspectionMinAggregateInputObjectSchema.optional(), _max: InspectionMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.InspectionGroupByArgs>;
+
+export const InspectionGroupByZodSchema = z.object({ where: InspectionWhereInputObjectSchema.optional(), orderBy: z.union([InspectionOrderByWithAggregationInputObjectSchema, InspectionOrderByWithAggregationInputObjectSchema.array()]).optional(), having: InspectionScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(InspectionScalarFieldEnumSchema), _count: z.union([ z.literal(true), InspectionCountAggregateInputObjectSchema ]).optional(), _min: InspectionMinAggregateInputObjectSchema.optional(), _max: InspectionMaxAggregateInputObjectSchema.optional() }).strict();

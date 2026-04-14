@@ -1,0 +1,12 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { CommentTaggedUserOrderByWithRelationInputObjectSchema as CommentTaggedUserOrderByWithRelationInputObjectSchema } from './objects/CommentTaggedUserOrderByWithRelationInput.schema';
+import { CommentTaggedUserWhereInputObjectSchema as CommentTaggedUserWhereInputObjectSchema } from './objects/CommentTaggedUserWhereInput.schema';
+import { CommentTaggedUserWhereUniqueInputObjectSchema as CommentTaggedUserWhereUniqueInputObjectSchema } from './objects/CommentTaggedUserWhereUniqueInput.schema';
+import { CommentTaggedUserCountAggregateInputObjectSchema as CommentTaggedUserCountAggregateInputObjectSchema } from './objects/CommentTaggedUserCountAggregateInput.schema';
+import { CommentTaggedUserMinAggregateInputObjectSchema as CommentTaggedUserMinAggregateInputObjectSchema } from './objects/CommentTaggedUserMinAggregateInput.schema';
+import { CommentTaggedUserMaxAggregateInputObjectSchema as CommentTaggedUserMaxAggregateInputObjectSchema } from './objects/CommentTaggedUserMaxAggregateInput.schema';
+
+export const CommentTaggedUserAggregateSchema: z.ZodType<Prisma.CommentTaggedUserAggregateArgs> = z.object({ orderBy: z.union([CommentTaggedUserOrderByWithRelationInputObjectSchema, CommentTaggedUserOrderByWithRelationInputObjectSchema.array()]).optional(), where: CommentTaggedUserWhereInputObjectSchema.optional(), cursor: CommentTaggedUserWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), CommentTaggedUserCountAggregateInputObjectSchema ]).optional(), _min: CommentTaggedUserMinAggregateInputObjectSchema.optional(), _max: CommentTaggedUserMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.CommentTaggedUserAggregateArgs>;
+
+export const CommentTaggedUserAggregateZodSchema = z.object({ orderBy: z.union([CommentTaggedUserOrderByWithRelationInputObjectSchema, CommentTaggedUserOrderByWithRelationInputObjectSchema.array()]).optional(), where: CommentTaggedUserWhereInputObjectSchema.optional(), cursor: CommentTaggedUserWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), CommentTaggedUserCountAggregateInputObjectSchema ]).optional(), _min: CommentTaggedUserMinAggregateInputObjectSchema.optional(), _max: CommentTaggedUserMaxAggregateInputObjectSchema.optional() }).strict();

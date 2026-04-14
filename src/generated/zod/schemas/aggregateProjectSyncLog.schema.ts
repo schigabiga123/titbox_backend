@@ -1,0 +1,14 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { ProjectSyncLogOrderByWithRelationInputObjectSchema as ProjectSyncLogOrderByWithRelationInputObjectSchema } from './objects/ProjectSyncLogOrderByWithRelationInput.schema';
+import { ProjectSyncLogWhereInputObjectSchema as ProjectSyncLogWhereInputObjectSchema } from './objects/ProjectSyncLogWhereInput.schema';
+import { ProjectSyncLogWhereUniqueInputObjectSchema as ProjectSyncLogWhereUniqueInputObjectSchema } from './objects/ProjectSyncLogWhereUniqueInput.schema';
+import { ProjectSyncLogCountAggregateInputObjectSchema as ProjectSyncLogCountAggregateInputObjectSchema } from './objects/ProjectSyncLogCountAggregateInput.schema';
+import { ProjectSyncLogMinAggregateInputObjectSchema as ProjectSyncLogMinAggregateInputObjectSchema } from './objects/ProjectSyncLogMinAggregateInput.schema';
+import { ProjectSyncLogMaxAggregateInputObjectSchema as ProjectSyncLogMaxAggregateInputObjectSchema } from './objects/ProjectSyncLogMaxAggregateInput.schema';
+import { ProjectSyncLogAvgAggregateInputObjectSchema as ProjectSyncLogAvgAggregateInputObjectSchema } from './objects/ProjectSyncLogAvgAggregateInput.schema';
+import { ProjectSyncLogSumAggregateInputObjectSchema as ProjectSyncLogSumAggregateInputObjectSchema } from './objects/ProjectSyncLogSumAggregateInput.schema';
+
+export const ProjectSyncLogAggregateSchema: z.ZodType<Prisma.ProjectSyncLogAggregateArgs> = z.object({ orderBy: z.union([ProjectSyncLogOrderByWithRelationInputObjectSchema, ProjectSyncLogOrderByWithRelationInputObjectSchema.array()]).optional(), where: ProjectSyncLogWhereInputObjectSchema.optional(), cursor: ProjectSyncLogWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), ProjectSyncLogCountAggregateInputObjectSchema ]).optional(), _min: ProjectSyncLogMinAggregateInputObjectSchema.optional(), _max: ProjectSyncLogMaxAggregateInputObjectSchema.optional(), _avg: ProjectSyncLogAvgAggregateInputObjectSchema.optional(), _sum: ProjectSyncLogSumAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.ProjectSyncLogAggregateArgs>;
+
+export const ProjectSyncLogAggregateZodSchema = z.object({ orderBy: z.union([ProjectSyncLogOrderByWithRelationInputObjectSchema, ProjectSyncLogOrderByWithRelationInputObjectSchema.array()]).optional(), where: ProjectSyncLogWhereInputObjectSchema.optional(), cursor: ProjectSyncLogWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), ProjectSyncLogCountAggregateInputObjectSchema ]).optional(), _min: ProjectSyncLogMinAggregateInputObjectSchema.optional(), _max: ProjectSyncLogMaxAggregateInputObjectSchema.optional(), _avg: ProjectSyncLogAvgAggregateInputObjectSchema.optional(), _sum: ProjectSyncLogSumAggregateInputObjectSchema.optional() }).strict();

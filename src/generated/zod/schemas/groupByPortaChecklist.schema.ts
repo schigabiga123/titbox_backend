@@ -1,0 +1,13 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { PortaChecklistWhereInputObjectSchema as PortaChecklistWhereInputObjectSchema } from './objects/PortaChecklistWhereInput.schema';
+import { PortaChecklistOrderByWithAggregationInputObjectSchema as PortaChecklistOrderByWithAggregationInputObjectSchema } from './objects/PortaChecklistOrderByWithAggregationInput.schema';
+import { PortaChecklistScalarWhereWithAggregatesInputObjectSchema as PortaChecklistScalarWhereWithAggregatesInputObjectSchema } from './objects/PortaChecklistScalarWhereWithAggregatesInput.schema';
+import { PortaChecklistScalarFieldEnumSchema } from './enums/PortaChecklistScalarFieldEnum.schema';
+import { PortaChecklistCountAggregateInputObjectSchema as PortaChecklistCountAggregateInputObjectSchema } from './objects/PortaChecklistCountAggregateInput.schema';
+import { PortaChecklistMinAggregateInputObjectSchema as PortaChecklistMinAggregateInputObjectSchema } from './objects/PortaChecklistMinAggregateInput.schema';
+import { PortaChecklistMaxAggregateInputObjectSchema as PortaChecklistMaxAggregateInputObjectSchema } from './objects/PortaChecklistMaxAggregateInput.schema';
+
+export const PortaChecklistGroupBySchema: z.ZodType<Prisma.PortaChecklistGroupByArgs> = z.object({ where: PortaChecklistWhereInputObjectSchema.optional(), orderBy: z.union([PortaChecklistOrderByWithAggregationInputObjectSchema, PortaChecklistOrderByWithAggregationInputObjectSchema.array()]).optional(), having: PortaChecklistScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(PortaChecklistScalarFieldEnumSchema), _count: z.union([ z.literal(true), PortaChecklistCountAggregateInputObjectSchema ]).optional(), _min: PortaChecklistMinAggregateInputObjectSchema.optional(), _max: PortaChecklistMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.PortaChecklistGroupByArgs>;
+
+export const PortaChecklistGroupByZodSchema = z.object({ where: PortaChecklistWhereInputObjectSchema.optional(), orderBy: z.union([PortaChecklistOrderByWithAggregationInputObjectSchema, PortaChecklistOrderByWithAggregationInputObjectSchema.array()]).optional(), having: PortaChecklistScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(PortaChecklistScalarFieldEnumSchema), _count: z.union([ z.literal(true), PortaChecklistCountAggregateInputObjectSchema ]).optional(), _min: PortaChecklistMinAggregateInputObjectSchema.optional(), _max: PortaChecklistMaxAggregateInputObjectSchema.optional() }).strict();

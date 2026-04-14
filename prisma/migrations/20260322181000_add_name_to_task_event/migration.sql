@@ -1,0 +1,2 @@
+ALTER TABLE "TaskEvent"
+ADD COLUMN "name" TEXT;

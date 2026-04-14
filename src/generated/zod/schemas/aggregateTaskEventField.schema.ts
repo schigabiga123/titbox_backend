@@ -1,0 +1,12 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { TaskEventFieldOrderByWithRelationInputObjectSchema as TaskEventFieldOrderByWithRelationInputObjectSchema } from './objects/TaskEventFieldOrderByWithRelationInput.schema';
+import { TaskEventFieldWhereInputObjectSchema as TaskEventFieldWhereInputObjectSchema } from './objects/TaskEventFieldWhereInput.schema';
+import { TaskEventFieldWhereUniqueInputObjectSchema as TaskEventFieldWhereUniqueInputObjectSchema } from './objects/TaskEventFieldWhereUniqueInput.schema';
+import { TaskEventFieldCountAggregateInputObjectSchema as TaskEventFieldCountAggregateInputObjectSchema } from './objects/TaskEventFieldCountAggregateInput.schema';
+import { TaskEventFieldMinAggregateInputObjectSchema as TaskEventFieldMinAggregateInputObjectSchema } from './objects/TaskEventFieldMinAggregateInput.schema';
+import { TaskEventFieldMaxAggregateInputObjectSchema as TaskEventFieldMaxAggregateInputObjectSchema } from './objects/TaskEventFieldMaxAggregateInput.schema';
+
+export const TaskEventFieldAggregateSchema: z.ZodType<Prisma.TaskEventFieldAggregateArgs> = z.object({ orderBy: z.union([TaskEventFieldOrderByWithRelationInputObjectSchema, TaskEventFieldOrderByWithRelationInputObjectSchema.array()]).optional(), where: TaskEventFieldWhereInputObjectSchema.optional(), cursor: TaskEventFieldWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), TaskEventFieldCountAggregateInputObjectSchema ]).optional(), _min: TaskEventFieldMinAggregateInputObjectSchema.optional(), _max: TaskEventFieldMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.TaskEventFieldAggregateArgs>;
+
+export const TaskEventFieldAggregateZodSchema = z.object({ orderBy: z.union([TaskEventFieldOrderByWithRelationInputObjectSchema, TaskEventFieldOrderByWithRelationInputObjectSchema.array()]).optional(), where: TaskEventFieldWhereInputObjectSchema.optional(), cursor: TaskEventFieldWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), _count: z.union([ z.literal(true), TaskEventFieldCountAggregateInputObjectSchema ]).optional(), _min: TaskEventFieldMinAggregateInputObjectSchema.optional(), _max: TaskEventFieldMaxAggregateInputObjectSchema.optional() }).strict();
