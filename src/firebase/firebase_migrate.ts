@@ -12,13 +12,22 @@ const FIREBASE_ROOT_DOC_ID = "rprodPRODprodPRODprod"
 const FIREBASE_PROJECTS_SUBCOLLECTION = "projects"
 const FIREBASE_PROJECT_LIMIT = 0
 
-admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-  }),
-})
+
+const rawServiceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_JSON
+
+if (rawServiceAccount) {
+  admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(rawServiceAccount) as admin.ServiceAccount),
+  })
+} else {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    }),
+  })
+}
 
 const db = admin.firestore()
  
