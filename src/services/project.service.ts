@@ -227,11 +227,63 @@ function getProjectDeadlineSortValue(project: any) {
   return Math.min(...deadlines)
 }
 
+function getPortaWindow(referenceDate = new Date()) {
+  return {
+    gte: startOfDay(addDays(referenceDate, -2)),
+    lte: endOfDay(addDays(referenceDate, 7)),
+  }
+}
+
+function isTaskMatchingPortaAnchor(task: any, referenceDate = new Date()) {
+  if (typeof task.fullAddress !== "string" || !task.fullAddress.toLowerCase().includes("környe")) {
+    return false
+  }
+
+  if (!(task.deadline instanceof Date)) {
+    return false
+  }
+
+  const portaWindow = getPortaWindow(referenceDate)
+  return task.deadline >= portaWindow.gte && task.deadline <= portaWindow.lte
+}
+
+function getPortaRelatedTasks(project: any, portaNumber: 1 | 2, referenceDate = new Date()) {
+  const includedTaskIds = new Set<string>()
+
+  for (const task of project.tasks) {
+    if (!isTaskMatchingPortaAnchor(task, referenceDate)) {
+      continue
+    }
+
+    console.log('anchorok')
+
+    includedTaskIds.add(task.id)
+
+    const taskGroupId = Number(task.groupId)
+    if (!Number.isFinite(taskGroupId)) {
+      continue
+    }
+
+    const pairedGroupId = portaNumber === 2 ? taskGroupId - 1 : taskGroupId + 1
+    console.log('pairedGroupId',pairedGroupId, portaNumber, taskGroupId)
+    const pairedTask = project.tasks.find(
+      (candidate: any) => Number(candidate.groupId) === pairedGroupId
+    )
+
+    if (pairedTask) {
+      includedTaskIds.add(pairedTask.id)
+    }
+  }
+
+  return project.tasks.filter((task: any) => includedTaskIds.has(task.id))
+}
+
 async function findProjects(
   where: ProjectWhereInput | undefined,
   pagination: PaginationInput,
   taskIncludeWhere?: TaskIncludeWhereInput,
-  deadlineOrder?: "ASC" | "DESC"
+  deadlineOrder?: "ASC" | "DESC",
+  portaNumber?: 1 | 2
 ) {
   const [totalCount, projects] = await prisma.$transaction(
     deadlineOrder
@@ -259,7 +311,19 @@ async function findProjects(
         ]
   )
 
-  const normalizedProjects = projects.map(withTaggedUserIdsInProject)
+  const normalizedProjects = projects.map((project) => {
+    const normalizedProject = withTaggedUserIdsInProject(project)
+
+    if (portaNumber === 1 || portaNumber === 2) {
+      console.log('szf', project.title)
+      return {
+        ...normalizedProject,
+        tasks: getPortaRelatedTasks(normalizedProject, portaNumber),
+      }
+    }
+
+    return normalizedProject
+  })
 
   if (deadlineOrder) {
     normalizedProjects.sort((left, right) => {
@@ -342,27 +406,20 @@ export async function searchProjects(
     })
   }
 
-  if (filters.portaNumber === 1 || filters.portaNumber === 2) {
-    projectAndConditions.push({
-      tasks: {
-        some: {
-          isPickUp: filters.portaNumber === 1,
-          fullAddress: KORNYE_ADDRESS,
-        },
-      },
-    })
-  }
-
   const taskWhere: TaskWhereInput = {}
   const taskAndConditions: TaskWhereInput[] = []
 
   if (filters.portaNumber === 1 || filters.portaNumber === 2) {
-    const deadlineReferenceDate = new Date()
-    taskWhere.deadline = {
-      gte: startOfDay(addDays(deadlineReferenceDate, -2)),
-      lte: endOfDay(addDays(deadlineReferenceDate, 7)),
+    const portaWindow = getPortaWindow()
+    taskWhere.isPickUp = filters.portaNumber === 1 ? true : false
+    taskWhere.fullAddress = {
+      contains: KORNYE_ADDRESS,
+      mode: "insensitive",
     }
-    console.log('taskWhere.deadline', taskWhere.deadline)
+    taskWhere.deadline = {
+      gte: portaWindow.gte,
+      lte: portaWindow.lte,
+    }
   } else if (filters.task?.deadlineAfter) {
     taskWhere.deadline = {
       gt: filters.task.deadlineAfter,
@@ -463,10 +520,9 @@ export async function searchProjects(
     projectAndConditions.push({
       tasks: { some: taskWhere },
     })
-  }
-
-  if (filters.task?.assignedUserId && Object.keys(taskWhere).length > 0) {
-    taskIncludeWhere = taskWhere
+    if (filters.portaNumber !== 1 && filters.portaNumber !== 2) {
+      taskIncludeWhere = taskWhere
+    }
   }
 
   if (filters.task?.taskFilter === "previous") {
@@ -497,7 +553,8 @@ export async function searchProjects(
         : { AND: projectAndConditions }
       : undefined
 
-  return findProjects(where, pagination, taskIncludeWhere, deadlineOrder)
+  console.log('taskIncludeWhere',taskIncludeWhere)
+  return findProjects(where, pagination, taskIncludeWhere, deadlineOrder, filters.portaNumber)
 }
 
 function removeNilProperties<T extends Record<string, unknown>>(input: T): Partial<T> {
