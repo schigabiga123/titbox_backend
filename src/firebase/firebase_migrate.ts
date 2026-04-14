@@ -2,7 +2,6 @@ import { AttachmentType, PrismaClient } from "@prisma/client"
 
 import admin from "firebase-admin"
 import dotenv from "dotenv"
-import serviceAccount from "./serviceAccount.json"
 
 dotenv.config()
 
@@ -14,7 +13,11 @@ const FIREBASE_PROJECTS_SUBCOLLECTION = "projects"
 const FIREBASE_PROJECT_LIMIT = 0
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+  }),
 })
 
 const db = admin.firestore()
