@@ -74,6 +74,7 @@ export type ProjectSearchFilters = {
   projectTitleContains?: string
   szfCode?: string
   portaNumber?: 1 | 2,
+  orderBy?: "ASC" | "DESC"
   task?: {
     deadlineAfter?: Date
     assignedUserId?: string
@@ -98,6 +99,24 @@ type TaskWhereInput = NonNullable<
 type TaskIncludeWhereInput = NonNullable<
   NonNullable<Parameters<typeof prisma.task.findMany>[0]>["where"]
 >
+
+function addDays(date: Date, days: number) {
+  const nextDate = new Date(date)
+  nextDate.setDate(nextDate.getDate() + days)
+  return nextDate
+}
+
+function startOfDay(date: Date) {
+  const nextDate = new Date(date)
+  nextDate.setHours(0, 0, 0, 0)
+  return nextDate
+}
+
+function endOfDay(date: Date) {
+  const nextDate = new Date(date)
+  nextDate.setHours(23, 59, 59, 999)
+  return nextDate
+}
 
 function buildProjectInclude(taskWhere?: TaskIncludeWhereInput) {
   return {
@@ -194,31 +213,88 @@ function createPaginationMeta(offset: number, limit: number, totalCount: number,
   }
 }
 
+function getProjectDeadlineSortValue(project: any) {
+  const deadlines = project.tasks
+    .filter((task: any) => task.isPickUp === true && task.deadline instanceof Date)
+    .map((task: any) => task.deadline)
+    .filter((deadline: Date | null): deadline is Date => deadline instanceof Date)
+    .map((deadline: Date) => deadline.getTime())
+
+  if (deadlines.length === 0) {
+    return null
+  }
+
+  return Math.min(...deadlines)
+}
+
 async function findProjects(
   where: ProjectWhereInput | undefined,
   pagination: PaginationInput,
-  taskIncludeWhere?: TaskIncludeWhereInput
+  taskIncludeWhere?: TaskIncludeWhereInput,
+  deadlineOrder?: "ASC" | "DESC"
 ) {
-  const [totalCount, projects] = await prisma.$transaction([
-    prisma.project.count({ where }),
-    prisma.project.findMany({
-      where,
-      skip: pagination.offset,
-      take: pagination.limit,
-      orderBy: {
-        id: "asc",
-      },
-      include: buildProjectInclude(taskIncludeWhere),
-    }),
-  ])
+  const [totalCount, projects] = await prisma.$transaction(
+    deadlineOrder
+      ? [
+          prisma.project.count({ where }),
+          prisma.project.findMany({
+            where,
+            orderBy: {
+              id: "asc",
+            },
+            include: buildProjectInclude(taskIncludeWhere),
+          }),
+        ]
+      : [
+          prisma.project.count({ where }),
+          prisma.project.findMany({
+            where,
+            skip: pagination.offset,
+            take: pagination.limit,
+            orderBy: {
+              id: "asc",
+            },
+            include: buildProjectInclude(taskIncludeWhere),
+          }),
+        ]
+  )
+
+  const normalizedProjects = projects.map(withTaggedUserIdsInProject)
+
+  if (deadlineOrder) {
+    normalizedProjects.sort((left, right) => {
+      const leftDeadline = getProjectDeadlineSortValue(left)
+      const rightDeadline = getProjectDeadlineSortValue(right)
+
+      if (leftDeadline === null && rightDeadline === null) {
+        return 0
+      }
+
+      if (leftDeadline === null) {
+        return 1
+      }
+
+      if (rightDeadline === null) {
+        return -1
+      }
+
+      return deadlineOrder === "ASC"
+        ? leftDeadline - rightDeadline
+        : rightDeadline - leftDeadline
+    })
+  }
+
+  const paginatedProjects = deadlineOrder
+    ? normalizedProjects.slice(pagination.offset, pagination.offset + pagination.limit)
+    : normalizedProjects
 
   return {
-    data: projects.map(withTaggedUserIdsInProject),
+    data: paginatedProjects,
     pagination: createPaginationMeta(
       pagination.offset,
       pagination.limit,
       totalCount,
-      projects.length
+      paginatedProjects.length
     ),
   }
 }
@@ -244,6 +320,7 @@ export async function searchProjects(
   filters: ProjectSearchFilters,
   pagination: PaginationInput
 ) {
+  const deadlineOrder = filters.orderBy ?? "DESC"
   const projectAndConditions: ProjectWhereInput[] = []
   let taskIncludeWhere: TaskIncludeWhereInput | undefined
 
@@ -279,7 +356,14 @@ export async function searchProjects(
   const taskWhere: TaskWhereInput = {}
   const taskAndConditions: TaskWhereInput[] = []
 
-  if (filters.task?.deadlineAfter) {
+  if (filters.portaNumber === 1 || filters.portaNumber === 2) {
+    const deadlineReferenceDate = new Date()
+    taskWhere.deadline = {
+      gte: startOfDay(addDays(deadlineReferenceDate, -2)),
+      lte: endOfDay(addDays(deadlineReferenceDate, 7)),
+    }
+    console.log('taskWhere.deadline', taskWhere.deadline)
+  } else if (filters.task?.deadlineAfter) {
     taskWhere.deadline = {
       gt: filters.task.deadlineAfter,
     }
@@ -413,7 +497,7 @@ export async function searchProjects(
         : { AND: projectAndConditions }
       : undefined
 
-  return findProjects(where, pagination, taskIncludeWhere)
+  return findProjects(where, pagination, taskIncludeWhere, deadlineOrder)
 }
 
 function removeNilProperties<T extends Record<string, unknown>>(input: T): Partial<T> {

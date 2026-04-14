@@ -655,6 +655,14 @@ function parseProjectSearchFilters(rawValue: unknown): ProjectSearchFilters | un
     result.portaNumber = searchObject.portaNumber
   }
 
+  if (searchObject.orderBy !== undefined) {
+    if (searchObject.orderBy !== "ASC" && searchObject.orderBy !== "DESC") {
+      throw new HttpError(400, "'search.orderBy' must be 'ASC' or 'DESC'")
+    }
+
+    result.orderBy = searchObject.orderBy
+  }
+
   if (searchObject.task !== undefined) {
     if (
       searchObject.task === null ||

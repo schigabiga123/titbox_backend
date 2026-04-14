@@ -208,9 +208,9 @@ registry.registerPath({
         .optional()
         .openapi({
           description:
-            "JSON string filter. Example: {\"szfCode\":\"SZF-123\",\"task\":{\"pickupAddressContains\":\"Budapest\",\"deliveryAddressContains\":\"Kornye\",\"taskFilter\":\"open\",\"deadlineAfter\":\"2026-03-01T00:00:00.000Z\",\"assignedUserId\":\"user-1\",\"submittedUserId\":\"user-2\",\"status\":\"doing\",\"vontatoDataContains\":\"ABC-123\",\"potkocsiDataContains\":\"XYZ-456\"}}",
+            "JSON string filter. Example: {\"szfCode\":\"SZF-123\",\"orderBy\":\"ASC\",\"task\":{\"pickupAddressContains\":\"Budapest\",\"deliveryAddressContains\":\"Kornye\",\"taskFilter\":\"open\",\"deadlineAfter\":\"2026-03-01T00:00:00.000Z\",\"assignedUserId\":\"user-1\",\"submittedUserId\":\"user-2\",\"status\":\"doing\",\"vontatoDataContains\":\"ABC-123\",\"potkocsiDataContains\":\"XYZ-456\"}}",
           example:
-            "{\"szfCode\":\"SZF-123\",\"task\":{\"pickupAddressContains\":\"Budapest\",\"deliveryAddressContains\":\"Kornye\",\"taskFilter\":\"open\",\"deadlineAfter\":\"2026-03-01T00:00:00.000Z\",\"assignedUserId\":\"user-1\",\"submittedUserId\":\"user-2\",\"status\":\"doing\",\"vontatoDataContains\":\"ABC-123\",\"potkocsiDataContains\":\"XYZ-456\"}}",
+            "{\"szfCode\":\"SZF-123\",\"orderBy\":\"ASC\",\"task\":{\"pickupAddressContains\":\"Budapest\",\"deliveryAddressContains\":\"Kornye\",\"taskFilter\":\"open\",\"deadlineAfter\":\"2026-03-01T00:00:00.000Z\",\"assignedUserId\":\"user-1\",\"submittedUserId\":\"user-2\",\"status\":\"doing\",\"vontatoDataContains\":\"ABC-123\",\"potkocsiDataContains\":\"XYZ-456\"}}",
         }),
     }),
   },
