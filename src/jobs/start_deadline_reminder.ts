@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 import dotenv from "dotenv"
+import { randomUUID } from "crypto"
 import { sendStartDeadlineReminderNotification } from "../services/notification.service"
 
 dotenv.config()
@@ -23,7 +24,7 @@ function createReminderThreshold(referenceDate = new Date()) {
   return new Date(referenceDate.getTime() + timeZoneOffsetMs - REMINDER_LEAD_TIME_MS)
 }
 
-async function sendStartDeadlineReminders() {
+export async function sendStartDeadlineReminders() {
   const reminderThreshold = createReminderThreshold()
 
   console.log('reminderThreshold',reminderThreshold.toLocaleString("sv-SE", {
@@ -71,13 +72,15 @@ async function sendStartDeadlineReminders() {
 
   for (const task of tasks) {
     try {
+      const sentAt = new Date()
+
       const markAsSentResult = await prisma.task.updateMany({
         where: {
           id: task.id,
           startReminderSentAt: null,
         },
         data: {
-          startReminderSentAt: new Date(),
+          startReminderSentAt: sentAt,
         },
       })
 
@@ -93,18 +96,50 @@ async function sendStartDeadlineReminders() {
         assignedUserId: task.assignedUserId,
       })
 
+      const reminderRecipients = [
+        task.submittedUserId
+          ? { userId: task.submittedUserId, recipientRole: "submittedUser" }
+          : null,
+        task.assignedUserId
+          ? { userId: task.assignedUserId, recipientRole: "assignedUser" }
+          : null,
+      ].filter((recipient): recipient is { userId: string; recipientRole: string } => Boolean(recipient))
+
+      if (reminderRecipients.length > 0) {
+        await prisma.$transaction(
+          reminderRecipients.map((recipient) =>
+            prisma.$executeRaw`
+              INSERT INTO "StartDeadlineReminderLog" ("id", "createdAt", "sentAt", "taskId", "projectId", "userId", "recipientRole")
+              VALUES (${randomUUID()}, NOW(), ${sentAt}, ${task.id}, ${task.projectId}, ${recipient.userId}, ${recipient.recipientRole})
+            `
+          )
+        )
+      }
+
       console.log(`Start reminder sent for task ${task.id}`)
     } catch (error) {
       console.error(`Failed to send start reminder for task ${task.id}`, error)
     }
   }
+
+  return {
+    candidateCount: tasks.length,
+    reminderThreshold: reminderThreshold.toISOString(),
+  }
 }
 
-void sendStartDeadlineReminders()
-  .catch((error) => {
-    console.error("Start deadline reminder job failed:", error)
-    process.exitCode = 1
-  })
-  .finally(async () => {
+export async function runStartDeadlineReminderJob() {
+  try {
+    return await sendStartDeadlineReminders()
+  } finally {
     await prisma.$disconnect()
-  })
+  }
+}
+
+if (require.main === module) {
+  void runStartDeadlineReminderJob()
+    .catch((error) => {
+      console.error("Start deadline reminder job failed:", error)
+      process.exitCode = 1
+    })
+}

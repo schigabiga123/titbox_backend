@@ -931,8 +931,7 @@ export async function runProjectSync({
           //console.log(
           //  `[${runnerName}] Skipping new project during test run: ${projectTitle} (pocketId=${pocketProjectId})`
           //)
-          if(i == 10){
-            project = await prisma.project.create({
+          project = await prisma.project.create({
             data: {
               pocketId: pocketProjectId,
               title: projectTitle,
@@ -949,11 +948,8 @@ export async function runProjectSync({
               partnerName,
             }
           )
-            console.log(`[${runnerName}] Created new project: ${projectTitle}`)
-            i++;
-          } else {
-            continue;
-          }
+          console.log(`[${runnerName}] Created new project: ${projectTitle}`)
+          i++;
         } else {
           console.log('UPDATING - ',projectTitle);
           const shouldUpdateExistingProject = shouldUpdateProject(project, {
