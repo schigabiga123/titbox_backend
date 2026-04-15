@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx prisma migrate deploy && node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "migrate:one": "ts-node src/firebase/firebase_migrate.ts",
     "job:project-sync-cron": "ts-node src/firebase/run_project_sync_cron.ts",
@@ -12,7 +13,6 @@
     "job:update-projects-by-minutes": "ts-node src/firebase/update_projects_by_minutes.ts",
     "job:start-deadline-reminder": "ts-node src/jobs/start_deadline_reminder.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
