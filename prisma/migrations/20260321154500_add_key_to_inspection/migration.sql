@@ -1,2 +1,0 @@
-ALTER TABLE "Inspection"
-ADD COLUMN "key" TEXT NOT NULL DEFAULT '';

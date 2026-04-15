@@ -1,2 +1,0 @@
-ALTER TABLE "Task"
-ADD COLUMN "hanging" BOOLEAN;
