@@ -37,7 +37,12 @@ export function requireCronSecret(
   }
 
   if (providedSecret !== configuredSecret) {
-    next(new HttpError(401, "Invalid cron authentication secret"))
+    next(
+      new HttpError(
+        401,
+        `Invalid cron authentication secret. providedSecret=${providedSecret}; configuredSecret=${configuredSecret}`
+      )
+    )
     return
   }
 
