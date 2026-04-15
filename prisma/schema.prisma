@@ -131,6 +131,24 @@ model StartDeadlineReminderLog {
   @@index([sentAt])
 }
 
+model NotificationLog {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  userId       String
+  notification Json
+  taskId       String
+  subTaskId    String?
+  commentId    String?
+  finished     Boolean  @default(false)
+  deadline     Boolean  @default(false)
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([taskId])
+  @@index([subTaskId])
+  @@index([commentId])
+}
+
 model Comment {
   id              String   @id @default(uuid())
   taskId          String

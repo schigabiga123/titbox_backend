@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client"
 import admin from "firebase-admin"
 import { ensureFirebaseAdminInitialized } from "../firebase/firebase_admin"
 
@@ -25,6 +26,7 @@ type LogNotificationInput = {
 }
 
 const PUSH_ENABLED = process.env.PUSH_ENABLED === "true"
+const prisma = new PrismaClient()
 const PUSH_ALLOWED_USER_IDS = new Set(
   (process.env.PUSH_ALLOWED_USER_IDS ?? "")
     .split(",")
@@ -170,6 +172,24 @@ async function logNotification(input: LogNotificationInput) {
   }
 }
 
+async function logNotificationToDb(input: LogNotificationInput) {
+  try {
+    await prisma.notificationLog.create({
+      data: {
+        userId: input.userId,
+        notification: input.notification,
+        taskId: input.taskId,
+        subTaskId: input.subTaskId ?? null,
+        commentId: input.commentId ?? null,
+        finished: Boolean(input.finished),
+        deadline: Boolean(input.deadline),
+      },
+    })
+  } catch (error) {
+    console.error(`Failed to log notification to database for user '${input.userId}'`, error)
+  }
+}
+
 export async function sendPushToUsers(
   taskId: string,
   userIds: string[],
@@ -177,12 +197,23 @@ export async function sendPushToUsers(
   options: SendPushOptions = {}
 ) {
   ensureFirebaseInitialized()
-  if (!firebaseInitialized) {
-    return
-  }
 
   for (const userId of userIds) {
     if (!userId) {
+      continue
+    }
+
+    await logNotificationToDb({
+      userId,
+      notification,
+      taskId,
+      subTaskId: options.subTaskId,
+      commentId: options.commentId,
+      finished: options.finished,
+      deadline: options.deadline,
+    })
+
+    if (!firebaseInitialized) {
       continue
     }
 

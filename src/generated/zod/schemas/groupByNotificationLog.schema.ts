@@ -1,0 +1,13 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { NotificationLogWhereInputObjectSchema as NotificationLogWhereInputObjectSchema } from './objects/NotificationLogWhereInput.schema';
+import { NotificationLogOrderByWithAggregationInputObjectSchema as NotificationLogOrderByWithAggregationInputObjectSchema } from './objects/NotificationLogOrderByWithAggregationInput.schema';
+import { NotificationLogScalarWhereWithAggregatesInputObjectSchema as NotificationLogScalarWhereWithAggregatesInputObjectSchema } from './objects/NotificationLogScalarWhereWithAggregatesInput.schema';
+import { NotificationLogScalarFieldEnumSchema } from './enums/NotificationLogScalarFieldEnum.schema';
+import { NotificationLogCountAggregateInputObjectSchema as NotificationLogCountAggregateInputObjectSchema } from './objects/NotificationLogCountAggregateInput.schema';
+import { NotificationLogMinAggregateInputObjectSchema as NotificationLogMinAggregateInputObjectSchema } from './objects/NotificationLogMinAggregateInput.schema';
+import { NotificationLogMaxAggregateInputObjectSchema as NotificationLogMaxAggregateInputObjectSchema } from './objects/NotificationLogMaxAggregateInput.schema';
+
+export const NotificationLogGroupBySchema: z.ZodType<Prisma.NotificationLogGroupByArgs> = z.object({ where: NotificationLogWhereInputObjectSchema.optional(), orderBy: z.union([NotificationLogOrderByWithAggregationInputObjectSchema, NotificationLogOrderByWithAggregationInputObjectSchema.array()]).optional(), having: NotificationLogScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(NotificationLogScalarFieldEnumSchema), _count: z.union([ z.literal(true), NotificationLogCountAggregateInputObjectSchema ]).optional(), _min: NotificationLogMinAggregateInputObjectSchema.optional(), _max: NotificationLogMaxAggregateInputObjectSchema.optional() }).strict() as unknown as z.ZodType<Prisma.NotificationLogGroupByArgs>;
+
+export const NotificationLogGroupByZodSchema = z.object({ where: NotificationLogWhereInputObjectSchema.optional(), orderBy: z.union([NotificationLogOrderByWithAggregationInputObjectSchema, NotificationLogOrderByWithAggregationInputObjectSchema.array()]).optional(), having: NotificationLogScalarWhereWithAggregatesInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), by: z.array(NotificationLogScalarFieldEnumSchema), _count: z.union([ z.literal(true), NotificationLogCountAggregateInputObjectSchema ]).optional(), _min: NotificationLogMinAggregateInputObjectSchema.optional(), _max: NotificationLogMaxAggregateInputObjectSchema.optional() }).strict();

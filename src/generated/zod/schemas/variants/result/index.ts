@@ -8,6 +8,7 @@ export { ProjectSyncLogResultSchema } from './ProjectSyncLog.result';
 export { ProjectSyncLogItemResultSchema } from './ProjectSyncLogItem.result';
 export { TaskResultSchema } from './Task.result';
 export { StartDeadlineReminderLogResultSchema } from './StartDeadlineReminderLog.result';
+export { NotificationLogResultSchema } from './NotificationLog.result';
 export { CommentResultSchema } from './Comment.result';
 export { CommentTaggedUserResultSchema } from './CommentTaggedUser.result';
 export { TaskFieldResultSchema } from './TaskField.result';
