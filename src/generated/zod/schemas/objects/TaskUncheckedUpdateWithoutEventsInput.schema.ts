@@ -9,7 +9,8 @@ import { CommentUncheckedUpdateManyWithoutTaskNestedInputObjectSchema as Comment
 import { TaskFieldUncheckedUpdateManyWithoutTaskNestedInputObjectSchema as TaskFieldUncheckedUpdateManyWithoutTaskNestedInputObjectSchema } from './TaskFieldUncheckedUpdateManyWithoutTaskNestedInput.schema';
 import { InspectionUncheckedUpdateManyWithoutTaskNestedInputObjectSchema as InspectionUncheckedUpdateManyWithoutTaskNestedInputObjectSchema } from './InspectionUncheckedUpdateManyWithoutTaskNestedInput.schema';
 import { PortaChecklistUncheckedUpdateOneWithoutTaskNestedInputObjectSchema as PortaChecklistUncheckedUpdateOneWithoutTaskNestedInputObjectSchema } from './PortaChecklistUncheckedUpdateOneWithoutTaskNestedInput.schema';
-import { LibraUncheckedUpdateOneWithoutTaskNestedInputObjectSchema as LibraUncheckedUpdateOneWithoutTaskNestedInputObjectSchema } from './LibraUncheckedUpdateOneWithoutTaskNestedInput.schema'
+import { LibraUncheckedUpdateOneWithoutTaskNestedInputObjectSchema as LibraUncheckedUpdateOneWithoutTaskNestedInputObjectSchema } from './LibraUncheckedUpdateOneWithoutTaskNestedInput.schema';
+import { StartDeadlineReminderLogUncheckedUpdateManyWithoutTaskNestedInputObjectSchema as StartDeadlineReminderLogUncheckedUpdateManyWithoutTaskNestedInputObjectSchema } from './StartDeadlineReminderLogUncheckedUpdateManyWithoutTaskNestedInput.schema'
 
 const makeSchema = () => z.object({
   id: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)]).optional(),
@@ -27,6 +28,7 @@ const makeSchema = () => z.object({
   isPickUp: z.union([z.boolean(), z.lazy(() => NullableBoolFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   accepted: z.union([z.boolean(), z.lazy(() => NullableBoolFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   hanging: z.union([z.boolean(), z.lazy(() => NullableBoolFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
+  parkingSpot: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   assignedUserId: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   assignedUserId2: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   submittedUserId: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
@@ -34,7 +36,8 @@ const makeSchema = () => z.object({
   fields: z.lazy(() => TaskFieldUncheckedUpdateManyWithoutTaskNestedInputObjectSchema).optional(),
   inspections: z.lazy(() => InspectionUncheckedUpdateManyWithoutTaskNestedInputObjectSchema).optional(),
   portaChecklist: z.lazy(() => PortaChecklistUncheckedUpdateOneWithoutTaskNestedInputObjectSchema).optional(),
-  libra: z.lazy(() => LibraUncheckedUpdateOneWithoutTaskNestedInputObjectSchema).optional()
+  libra: z.lazy(() => LibraUncheckedUpdateOneWithoutTaskNestedInputObjectSchema).optional(),
+  startDeadlineReminderLogs: z.lazy(() => StartDeadlineReminderLogUncheckedUpdateManyWithoutTaskNestedInputObjectSchema).optional()
 }).strict();
 export const TaskUncheckedUpdateWithoutEventsInputObjectSchema: z.ZodType<Prisma.TaskUncheckedUpdateWithoutEventsInput> = makeSchema() as unknown as z.ZodType<Prisma.TaskUncheckedUpdateWithoutEventsInput>;
 export const TaskUncheckedUpdateWithoutEventsInputObjectZodSchema = makeSchema();

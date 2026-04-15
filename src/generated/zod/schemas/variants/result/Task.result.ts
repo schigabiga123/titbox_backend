@@ -16,6 +16,7 @@ export const TaskResultSchema = z.object({
     isPickUp: z.boolean().nullable(),
     accepted: z.boolean().nullable(),
     hanging: z.boolean().nullable(),
+    parkingSpot: z.string().nullable(),
     assignedUserId: z.string().nullable(),
     assignedUserId2: z.string().nullable(),
     submittedUserId: z.string().nullable(),
@@ -25,7 +26,8 @@ export const TaskResultSchema = z.object({
     inspections: z.array(z.unknown()),
     portaChecklist: z.unknown().nullable(),
     libra: z.unknown().nullable(),
-    events: z.array(z.unknown())
+    events: z.array(z.unknown()),
+    startDeadlineReminderLogs: z.array(z.unknown())
 }).strict();
 
 export type TaskResultType = z.infer<typeof TaskResultSchema>;

@@ -5,7 +5,8 @@ import { CommentCreateNestedManyWithoutTaskInputObjectSchema as CommentCreateNes
 import { InspectionCreateNestedManyWithoutTaskInputObjectSchema as InspectionCreateNestedManyWithoutTaskInputObjectSchema } from './InspectionCreateNestedManyWithoutTaskInput.schema';
 import { PortaChecklistCreateNestedOneWithoutTaskInputObjectSchema as PortaChecklistCreateNestedOneWithoutTaskInputObjectSchema } from './PortaChecklistCreateNestedOneWithoutTaskInput.schema';
 import { LibraCreateNestedOneWithoutTaskInputObjectSchema as LibraCreateNestedOneWithoutTaskInputObjectSchema } from './LibraCreateNestedOneWithoutTaskInput.schema';
-import { TaskEventCreateNestedManyWithoutTaskInputObjectSchema as TaskEventCreateNestedManyWithoutTaskInputObjectSchema } from './TaskEventCreateNestedManyWithoutTaskInput.schema'
+import { TaskEventCreateNestedManyWithoutTaskInputObjectSchema as TaskEventCreateNestedManyWithoutTaskInputObjectSchema } from './TaskEventCreateNestedManyWithoutTaskInput.schema';
+import { StartDeadlineReminderLogCreateNestedManyWithoutTaskInputObjectSchema as StartDeadlineReminderLogCreateNestedManyWithoutTaskInputObjectSchema } from './StartDeadlineReminderLogCreateNestedManyWithoutTaskInput.schema'
 
 const makeSchema = () => z.object({
   id: z.string().optional(),
@@ -22,6 +23,7 @@ const makeSchema = () => z.object({
   isPickUp: z.boolean().optional().nullable(),
   accepted: z.boolean().optional().nullable(),
   hanging: z.boolean().optional().nullable(),
+  parkingSpot: z.string().optional().nullable(),
   assignedUserId: z.string().optional().nullable(),
   assignedUserId2: z.string().optional().nullable(),
   submittedUserId: z.string().optional().nullable(),
@@ -30,7 +32,8 @@ const makeSchema = () => z.object({
   inspections: z.lazy(() => InspectionCreateNestedManyWithoutTaskInputObjectSchema).optional(),
   portaChecklist: z.lazy(() => PortaChecklistCreateNestedOneWithoutTaskInputObjectSchema).optional(),
   libra: z.lazy(() => LibraCreateNestedOneWithoutTaskInputObjectSchema).optional(),
-  events: z.lazy(() => TaskEventCreateNestedManyWithoutTaskInputObjectSchema).optional()
+  events: z.lazy(() => TaskEventCreateNestedManyWithoutTaskInputObjectSchema).optional(),
+  startDeadlineReminderLogs: z.lazy(() => StartDeadlineReminderLogCreateNestedManyWithoutTaskInputObjectSchema).optional()
 }).strict();
 export const TaskCreateWithoutFieldsInputObjectSchema: z.ZodType<Prisma.TaskCreateWithoutFieldsInput> = makeSchema() as unknown as z.ZodType<Prisma.TaskCreateWithoutFieldsInput>;
 export const TaskCreateWithoutFieldsInputObjectZodSchema = makeSchema();

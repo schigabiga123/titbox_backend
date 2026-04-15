@@ -16,6 +16,7 @@ export const TaskInputSchema = z.object({
     isPickUp: z.boolean().optional().nullable(),
     accepted: z.boolean().optional().nullable(),
     hanging: z.boolean().optional().nullable(),
+    parkingSpot: z.string().optional().nullable(),
     assignedUserId: z.string().optional().nullable(),
     assignedUserId2: z.string().optional().nullable(),
     submittedUserId: z.string().optional().nullable(),
@@ -25,7 +26,8 @@ export const TaskInputSchema = z.object({
     inspections: z.array(z.unknown()),
     portaChecklist: z.unknown().optional().nullable(),
     libra: z.unknown().optional().nullable(),
-    events: z.array(z.unknown())
+    events: z.array(z.unknown()),
+    startDeadlineReminderLogs: z.array(z.unknown())
 }).strict();
 
 export type TaskInputType = z.infer<typeof TaskInputSchema>;

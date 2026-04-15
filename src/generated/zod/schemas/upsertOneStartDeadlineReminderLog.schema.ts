@@ -1,0 +1,13 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { StartDeadlineReminderLogSelectObjectSchema as StartDeadlineReminderLogSelectObjectSchema } from './objects/StartDeadlineReminderLogSelect.schema';
+import { StartDeadlineReminderLogIncludeObjectSchema as StartDeadlineReminderLogIncludeObjectSchema } from './objects/StartDeadlineReminderLogInclude.schema';
+import { StartDeadlineReminderLogWhereUniqueInputObjectSchema as StartDeadlineReminderLogWhereUniqueInputObjectSchema } from './objects/StartDeadlineReminderLogWhereUniqueInput.schema';
+import { StartDeadlineReminderLogCreateInputObjectSchema as StartDeadlineReminderLogCreateInputObjectSchema } from './objects/StartDeadlineReminderLogCreateInput.schema';
+import { StartDeadlineReminderLogUncheckedCreateInputObjectSchema as StartDeadlineReminderLogUncheckedCreateInputObjectSchema } from './objects/StartDeadlineReminderLogUncheckedCreateInput.schema';
+import { StartDeadlineReminderLogUpdateInputObjectSchema as StartDeadlineReminderLogUpdateInputObjectSchema } from './objects/StartDeadlineReminderLogUpdateInput.schema';
+import { StartDeadlineReminderLogUncheckedUpdateInputObjectSchema as StartDeadlineReminderLogUncheckedUpdateInputObjectSchema } from './objects/StartDeadlineReminderLogUncheckedUpdateInput.schema';
+
+export const StartDeadlineReminderLogUpsertOneSchema: z.ZodType<Prisma.StartDeadlineReminderLogUpsertArgs> = z.object({ select: StartDeadlineReminderLogSelectObjectSchema.optional(), include: StartDeadlineReminderLogIncludeObjectSchema.optional(), where: StartDeadlineReminderLogWhereUniqueInputObjectSchema, create: z.union([ StartDeadlineReminderLogCreateInputObjectSchema, StartDeadlineReminderLogUncheckedCreateInputObjectSchema ]), update: z.union([ StartDeadlineReminderLogUpdateInputObjectSchema, StartDeadlineReminderLogUncheckedUpdateInputObjectSchema ]) }).strict() as unknown as z.ZodType<Prisma.StartDeadlineReminderLogUpsertArgs>;
+
+export const StartDeadlineReminderLogUpsertOneZodSchema = z.object({ select: StartDeadlineReminderLogSelectObjectSchema.optional(), include: StartDeadlineReminderLogIncludeObjectSchema.optional(), where: StartDeadlineReminderLogWhereUniqueInputObjectSchema, create: z.union([ StartDeadlineReminderLogCreateInputObjectSchema, StartDeadlineReminderLogUncheckedCreateInputObjectSchema ]), update: z.union([ StartDeadlineReminderLogUpdateInputObjectSchema, StartDeadlineReminderLogUncheckedUpdateInputObjectSchema ]) }).strict();

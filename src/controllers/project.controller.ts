@@ -921,6 +921,7 @@ const taskPatchFields: Record<string, PatchFieldDefinition> = {
   lng: { type: "number" },
   isPickUp: { type: "boolean" },
   accepted: { type: "boolean" },
+  parkingSpot: { type: "nullableString" },
   assignedUserId: { type: "string" },
   assignedUserId2: { type: "string" },
   submittedUserId: { type: "string" },

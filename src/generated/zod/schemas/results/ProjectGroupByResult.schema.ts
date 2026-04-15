@@ -13,7 +13,8 @@ export const ProjectGroupByResultSchema = z.array(z.object({
     updatedAt: z.number(),
     tasks: z.number(),
     syncLogs: z.number(),
-    syncLogItems: z.number()
+    syncLogItems: z.number(),
+    startDeadlineReminderLogs: z.number()
   }).optional(),
   _min: z.object({
     id: z.string().nullable(),

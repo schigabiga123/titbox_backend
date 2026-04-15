@@ -15,6 +15,7 @@ export const TaskAggregateResultSchema = z.object({  _count: z.object({
     isPickUp: z.number(),
     accepted: z.number(),
     hanging: z.number(),
+    parkingSpot: z.number(),
     assignedUserId: z.number(),
     assignedUserId2: z.number(),
     submittedUserId: z.number(),
@@ -24,7 +25,8 @@ export const TaskAggregateResultSchema = z.object({  _count: z.object({
     inspections: z.number(),
     portaChecklist: z.number(),
     libra: z.number(),
-    events: z.number()
+    events: z.number(),
+    startDeadlineReminderLogs: z.number()
   }).optional(),
   _sum: z.object({
     lat: z.number().nullable(),
@@ -47,6 +49,7 @@ export const TaskAggregateResultSchema = z.object({  _count: z.object({
     fullAddress: z.string().nullable(),
     lat: z.number().nullable(),
     lng: z.number().nullable(),
+    parkingSpot: z.string().nullable(),
     assignedUserId: z.string().nullable(),
     assignedUserId2: z.string().nullable(),
     submittedUserId: z.string().nullable()
@@ -64,6 +67,7 @@ export const TaskAggregateResultSchema = z.object({  _count: z.object({
     fullAddress: z.string().nullable(),
     lat: z.number().nullable(),
     lng: z.number().nullable(),
+    parkingSpot: z.string().nullable(),
     assignedUserId: z.string().nullable(),
     assignedUserId2: z.string().nullable(),
     submittedUserId: z.string().nullable()

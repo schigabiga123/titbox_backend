@@ -7,6 +7,7 @@ export { ProjectModelSchema } from './Project.pure';
 export { ProjectSyncLogModelSchema } from './ProjectSyncLog.pure';
 export { ProjectSyncLogItemModelSchema } from './ProjectSyncLogItem.pure';
 export { TaskModelSchema } from './Task.pure';
+export { StartDeadlineReminderLogModelSchema } from './StartDeadlineReminderLog.pure';
 export { CommentModelSchema } from './Comment.pure';
 export { CommentTaggedUserModelSchema } from './CommentTaggedUser.pure';
 export { TaskFieldModelSchema } from './TaskField.pure';

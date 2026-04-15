@@ -17,6 +17,7 @@ const makeSchema = () => z.object({
   isPickUp: z.boolean().optional().nullable(),
   accepted: z.boolean().optional().nullable(),
   hanging: z.boolean().optional().nullable(),
+  parkingSpot: z.string().optional().nullable(),
   assignedUserId: z.string().optional().nullable(),
   assignedUserId2: z.string().optional().nullable(),
   submittedUserId: z.string().optional().nullable()

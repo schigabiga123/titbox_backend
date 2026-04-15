@@ -7,5 +7,6 @@ export const ProjectCreateResultSchema = z.object({
   updatedAt: z.date().optional(),
   tasks: z.array(z.unknown()),
   syncLogs: z.array(z.unknown()),
-  syncLogItems: z.array(z.unknown())
+  syncLogItems: z.array(z.unknown()),
+  startDeadlineReminderLogs: z.array(z.unknown())
 });

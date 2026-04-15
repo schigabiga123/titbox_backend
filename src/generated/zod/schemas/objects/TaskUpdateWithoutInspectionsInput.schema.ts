@@ -10,7 +10,8 @@ import { CommentUpdateManyWithoutTaskNestedInputObjectSchema as CommentUpdateMan
 import { TaskFieldUpdateManyWithoutTaskNestedInputObjectSchema as TaskFieldUpdateManyWithoutTaskNestedInputObjectSchema } from './TaskFieldUpdateManyWithoutTaskNestedInput.schema';
 import { PortaChecklistUpdateOneWithoutTaskNestedInputObjectSchema as PortaChecklistUpdateOneWithoutTaskNestedInputObjectSchema } from './PortaChecklistUpdateOneWithoutTaskNestedInput.schema';
 import { LibraUpdateOneWithoutTaskNestedInputObjectSchema as LibraUpdateOneWithoutTaskNestedInputObjectSchema } from './LibraUpdateOneWithoutTaskNestedInput.schema';
-import { TaskEventUpdateManyWithoutTaskNestedInputObjectSchema as TaskEventUpdateManyWithoutTaskNestedInputObjectSchema } from './TaskEventUpdateManyWithoutTaskNestedInput.schema'
+import { TaskEventUpdateManyWithoutTaskNestedInputObjectSchema as TaskEventUpdateManyWithoutTaskNestedInputObjectSchema } from './TaskEventUpdateManyWithoutTaskNestedInput.schema';
+import { StartDeadlineReminderLogUpdateManyWithoutTaskNestedInputObjectSchema as StartDeadlineReminderLogUpdateManyWithoutTaskNestedInputObjectSchema } from './StartDeadlineReminderLogUpdateManyWithoutTaskNestedInput.schema'
 
 const makeSchema = () => z.object({
   id: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)]).optional(),
@@ -27,6 +28,7 @@ const makeSchema = () => z.object({
   isPickUp: z.union([z.boolean(), z.lazy(() => NullableBoolFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   accepted: z.union([z.boolean(), z.lazy(() => NullableBoolFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   hanging: z.union([z.boolean(), z.lazy(() => NullableBoolFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
+  parkingSpot: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   assignedUserId: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   assignedUserId2: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   submittedUserId: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
@@ -35,7 +37,8 @@ const makeSchema = () => z.object({
   fields: z.lazy(() => TaskFieldUpdateManyWithoutTaskNestedInputObjectSchema).optional(),
   portaChecklist: z.lazy(() => PortaChecklistUpdateOneWithoutTaskNestedInputObjectSchema).optional(),
   libra: z.lazy(() => LibraUpdateOneWithoutTaskNestedInputObjectSchema).optional(),
-  events: z.lazy(() => TaskEventUpdateManyWithoutTaskNestedInputObjectSchema).optional()
+  events: z.lazy(() => TaskEventUpdateManyWithoutTaskNestedInputObjectSchema).optional(),
+  startDeadlineReminderLogs: z.lazy(() => StartDeadlineReminderLogUpdateManyWithoutTaskNestedInputObjectSchema).optional()
 }).strict();
 export const TaskUpdateWithoutInspectionsInputObjectSchema: z.ZodType<Prisma.TaskUpdateWithoutInspectionsInput> = makeSchema() as unknown as z.ZodType<Prisma.TaskUpdateWithoutInspectionsInput>;
 export const TaskUpdateWithoutInspectionsInputObjectZodSchema = makeSchema();

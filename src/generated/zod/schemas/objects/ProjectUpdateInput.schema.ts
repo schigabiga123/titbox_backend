@@ -5,7 +5,8 @@ import { NullableStringFieldUpdateOperationsInputObjectSchema as NullableStringF
 import { NullableDateTimeFieldUpdateOperationsInputObjectSchema as NullableDateTimeFieldUpdateOperationsInputObjectSchema } from './NullableDateTimeFieldUpdateOperationsInput.schema';
 import { TaskUpdateManyWithoutProjectNestedInputObjectSchema as TaskUpdateManyWithoutProjectNestedInputObjectSchema } from './TaskUpdateManyWithoutProjectNestedInput.schema';
 import { ProjectSyncLogUpdateManyWithoutProjectNestedInputObjectSchema as ProjectSyncLogUpdateManyWithoutProjectNestedInputObjectSchema } from './ProjectSyncLogUpdateManyWithoutProjectNestedInput.schema';
-import { ProjectSyncLogItemUpdateManyWithoutProjectNestedInputObjectSchema as ProjectSyncLogItemUpdateManyWithoutProjectNestedInputObjectSchema } from './ProjectSyncLogItemUpdateManyWithoutProjectNestedInput.schema'
+import { ProjectSyncLogItemUpdateManyWithoutProjectNestedInputObjectSchema as ProjectSyncLogItemUpdateManyWithoutProjectNestedInputObjectSchema } from './ProjectSyncLogItemUpdateManyWithoutProjectNestedInput.schema';
+import { StartDeadlineReminderLogUpdateManyWithoutProjectNestedInputObjectSchema as StartDeadlineReminderLogUpdateManyWithoutProjectNestedInputObjectSchema } from './StartDeadlineReminderLogUpdateManyWithoutProjectNestedInput.schema'
 
 const makeSchema = () => z.object({
   id: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)]).optional(),
@@ -15,7 +16,8 @@ const makeSchema = () => z.object({
   updatedAt: z.union([z.coerce.date(), z.lazy(() => NullableDateTimeFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   tasks: z.lazy(() => TaskUpdateManyWithoutProjectNestedInputObjectSchema).optional(),
   syncLogs: z.lazy(() => ProjectSyncLogUpdateManyWithoutProjectNestedInputObjectSchema).optional(),
-  syncLogItems: z.lazy(() => ProjectSyncLogItemUpdateManyWithoutProjectNestedInputObjectSchema).optional()
+  syncLogItems: z.lazy(() => ProjectSyncLogItemUpdateManyWithoutProjectNestedInputObjectSchema).optional(),
+  startDeadlineReminderLogs: z.lazy(() => StartDeadlineReminderLogUpdateManyWithoutProjectNestedInputObjectSchema).optional()
 }).strict();
 export const ProjectUpdateInputObjectSchema: z.ZodType<Prisma.ProjectUpdateInput> = makeSchema() as unknown as z.ZodType<Prisma.ProjectUpdateInput>;
 export const ProjectUpdateInputObjectZodSchema = makeSchema();

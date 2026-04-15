@@ -1,0 +1,10 @@
+import type { Prisma } from '@prisma/client';
+import * as z from 'zod';
+import { StartDeadlineReminderLogOrderByWithRelationInputObjectSchema as StartDeadlineReminderLogOrderByWithRelationInputObjectSchema } from './objects/StartDeadlineReminderLogOrderByWithRelationInput.schema';
+import { StartDeadlineReminderLogWhereInputObjectSchema as StartDeadlineReminderLogWhereInputObjectSchema } from './objects/StartDeadlineReminderLogWhereInput.schema';
+import { StartDeadlineReminderLogWhereUniqueInputObjectSchema as StartDeadlineReminderLogWhereUniqueInputObjectSchema } from './objects/StartDeadlineReminderLogWhereUniqueInput.schema';
+import { StartDeadlineReminderLogCountAggregateInputObjectSchema as StartDeadlineReminderLogCountAggregateInputObjectSchema } from './objects/StartDeadlineReminderLogCountAggregateInput.schema';
+
+export const StartDeadlineReminderLogCountSchema: z.ZodType<Prisma.StartDeadlineReminderLogCountArgs> = z.object({ orderBy: z.union([StartDeadlineReminderLogOrderByWithRelationInputObjectSchema, StartDeadlineReminderLogOrderByWithRelationInputObjectSchema.array()]).optional(), where: StartDeadlineReminderLogWhereInputObjectSchema.optional(), cursor: StartDeadlineReminderLogWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), select: z.union([ z.literal(true), StartDeadlineReminderLogCountAggregateInputObjectSchema ]).optional() }).strict() as unknown as z.ZodType<Prisma.StartDeadlineReminderLogCountArgs>;
+
+export const StartDeadlineReminderLogCountZodSchema = z.object({ orderBy: z.union([StartDeadlineReminderLogOrderByWithRelationInputObjectSchema, StartDeadlineReminderLogOrderByWithRelationInputObjectSchema.array()]).optional(), where: StartDeadlineReminderLogWhereInputObjectSchema.optional(), cursor: StartDeadlineReminderLogWhereUniqueInputObjectSchema.optional(), take: z.number().optional(), skip: z.number().optional(), select: z.union([ z.literal(true), StartDeadlineReminderLogCountAggregateInputObjectSchema ]).optional() }).strict();

@@ -5,7 +5,8 @@ import { StringNullableFilterObjectSchema as StringNullableFilterObjectSchema } 
 import { DateTimeNullableFilterObjectSchema as DateTimeNullableFilterObjectSchema } from './DateTimeNullableFilter.schema';
 import { TaskListRelationFilterObjectSchema as TaskListRelationFilterObjectSchema } from './TaskListRelationFilter.schema';
 import { ProjectSyncLogListRelationFilterObjectSchema as ProjectSyncLogListRelationFilterObjectSchema } from './ProjectSyncLogListRelationFilter.schema';
-import { ProjectSyncLogItemListRelationFilterObjectSchema as ProjectSyncLogItemListRelationFilterObjectSchema } from './ProjectSyncLogItemListRelationFilter.schema'
+import { ProjectSyncLogItemListRelationFilterObjectSchema as ProjectSyncLogItemListRelationFilterObjectSchema } from './ProjectSyncLogItemListRelationFilter.schema';
+import { StartDeadlineReminderLogListRelationFilterObjectSchema as StartDeadlineReminderLogListRelationFilterObjectSchema } from './StartDeadlineReminderLogListRelationFilter.schema'
 
 const projectwhereinputSchema = z.object({
   AND: z.union([z.lazy(() => ProjectWhereInputObjectSchema), z.lazy(() => ProjectWhereInputObjectSchema).array()]).optional(),
@@ -18,7 +19,8 @@ const projectwhereinputSchema = z.object({
   updatedAt: z.union([z.lazy(() => DateTimeNullableFilterObjectSchema), z.coerce.date()]).optional().nullable(),
   tasks: z.lazy(() => TaskListRelationFilterObjectSchema).optional(),
   syncLogs: z.lazy(() => ProjectSyncLogListRelationFilterObjectSchema).optional(),
-  syncLogItems: z.lazy(() => ProjectSyncLogItemListRelationFilterObjectSchema).optional()
+  syncLogItems: z.lazy(() => ProjectSyncLogItemListRelationFilterObjectSchema).optional(),
+  startDeadlineReminderLogs: z.lazy(() => StartDeadlineReminderLogListRelationFilterObjectSchema).optional()
 }).strict();
 export const ProjectWhereInputObjectSchema: z.ZodType<Prisma.ProjectWhereInput> = projectwhereinputSchema as unknown as z.ZodType<Prisma.ProjectWhereInput>;
 export const ProjectWhereInputObjectZodSchema = projectwhereinputSchema;

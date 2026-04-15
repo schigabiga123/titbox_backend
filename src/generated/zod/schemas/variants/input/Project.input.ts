@@ -8,7 +8,8 @@ export const ProjectInputSchema = z.object({
     updatedAt: z.date().optional().nullable(),
     tasks: z.array(z.unknown()),
     syncLogs: z.array(z.unknown()),
-    syncLogItems: z.array(z.unknown())
+    syncLogItems: z.array(z.unknown()),
+    startDeadlineReminderLogs: z.array(z.unknown())
 }).strict();
 
 export type ProjectInputType = z.infer<typeof ProjectInputSchema>;

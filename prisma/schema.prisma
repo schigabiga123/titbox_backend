@@ -97,6 +97,7 @@ model Task {
   isPickUp           Boolean?
   accepted           Boolean?
   hanging            Boolean?
+  parkingSpot        String?
 
   assignedUserId     String?
   assignedUserId2    String?

@@ -15,6 +15,7 @@ export const TaskUpdateResultSchema = z.nullable(z.object({
   isPickUp: z.boolean().optional(),
   accepted: z.boolean().optional(),
   hanging: z.boolean().optional(),
+  parkingSpot: z.string().optional(),
   assignedUserId: z.string().optional(),
   assignedUserId2: z.string().optional(),
   submittedUserId: z.string().optional(),
@@ -24,5 +25,6 @@ export const TaskUpdateResultSchema = z.nullable(z.object({
   inspections: z.array(z.unknown()),
   portaChecklist: z.unknown().optional(),
   libra: z.unknown().optional(),
-  events: z.array(z.unknown())
+  events: z.array(z.unknown()),
+  startDeadlineReminderLogs: z.array(z.unknown())
 }));

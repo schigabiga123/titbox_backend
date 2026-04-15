@@ -25,6 +25,7 @@ export const TaskFindFirstSelectSchema: z.ZodType<Prisma.TaskSelect> = z.object(
     isPickUp: z.boolean().optional(),
     accepted: z.boolean().optional(),
     hanging: z.boolean().optional(),
+    parkingSpot: z.boolean().optional(),
     assignedUserId: z.boolean().optional(),
     assignedUserId2: z.boolean().optional(),
     submittedUserId: z.boolean().optional(),
@@ -35,6 +36,7 @@ export const TaskFindFirstSelectSchema: z.ZodType<Prisma.TaskSelect> = z.object(
     portaChecklist: z.boolean().optional(),
     libra: z.boolean().optional(),
     events: z.boolean().optional(),
+    startDeadlineReminderLogs: z.boolean().optional(),
     _count: z.boolean().optional()
   }).strict() as unknown as z.ZodType<Prisma.TaskSelect>;
 
@@ -54,6 +56,7 @@ export const TaskFindFirstSelectZodSchema = z.object({
     isPickUp: z.boolean().optional(),
     accepted: z.boolean().optional(),
     hanging: z.boolean().optional(),
+    parkingSpot: z.boolean().optional(),
     assignedUserId: z.boolean().optional(),
     assignedUserId2: z.boolean().optional(),
     submittedUserId: z.boolean().optional(),
@@ -64,6 +67,7 @@ export const TaskFindFirstSelectZodSchema = z.object({
     portaChecklist: z.boolean().optional(),
     libra: z.boolean().optional(),
     events: z.boolean().optional(),
+    startDeadlineReminderLogs: z.boolean().optional(),
     _count: z.boolean().optional()
   }).strict();
 

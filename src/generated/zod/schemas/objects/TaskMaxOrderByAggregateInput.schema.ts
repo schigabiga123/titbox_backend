@@ -18,6 +18,7 @@ const makeSchema = () => z.object({
   isPickUp: SortOrderSchema.optional(),
   accepted: SortOrderSchema.optional(),
   hanging: SortOrderSchema.optional(),
+  parkingSpot: SortOrderSchema.optional(),
   assignedUserId: SortOrderSchema.optional(),
   assignedUserId2: SortOrderSchema.optional(),
   submittedUserId: SortOrderSchema.optional()

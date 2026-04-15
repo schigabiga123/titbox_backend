@@ -7,6 +7,7 @@ export { ProjectInputSchema } from './Project.input';
 export { ProjectSyncLogInputSchema } from './ProjectSyncLog.input';
 export { ProjectSyncLogItemInputSchema } from './ProjectSyncLogItem.input';
 export { TaskInputSchema } from './Task.input';
+export { StartDeadlineReminderLogInputSchema } from './StartDeadlineReminderLog.input';
 export { CommentInputSchema } from './Comment.input';
 export { CommentTaggedUserInputSchema } from './CommentTaggedUser.input';
 export { TaskFieldInputSchema } from './TaskField.input';

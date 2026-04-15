@@ -18,6 +18,7 @@ export const ProjectFindFirstSelectSchema: z.ZodType<Prisma.ProjectSelect> = z.o
     tasks: z.boolean().optional(),
     syncLogs: z.boolean().optional(),
     syncLogItems: z.boolean().optional(),
+    startDeadlineReminderLogs: z.boolean().optional(),
     _count: z.boolean().optional()
   }).strict() as unknown as z.ZodType<Prisma.ProjectSelect>;
 
@@ -30,6 +31,7 @@ export const ProjectFindFirstSelectZodSchema = z.object({
     tasks: z.boolean().optional(),
     syncLogs: z.boolean().optional(),
     syncLogItems: z.boolean().optional(),
+    startDeadlineReminderLogs: z.boolean().optional(),
     _count: z.boolean().optional()
   }).strict();
 

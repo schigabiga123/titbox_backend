@@ -18,6 +18,7 @@ export const ProjectFindManySelectSchema: z.ZodType<Prisma.ProjectSelect> = z.ob
     tasks: z.boolean().optional(),
     syncLogs: z.boolean().optional(),
     syncLogItems: z.boolean().optional(),
+    startDeadlineReminderLogs: z.boolean().optional(),
     _count: z.boolean().optional()
   }).strict() as unknown as z.ZodType<Prisma.ProjectSelect>;
 
@@ -30,6 +31,7 @@ export const ProjectFindManySelectZodSchema = z.object({
     tasks: z.boolean().optional(),
     syncLogs: z.boolean().optional(),
     syncLogItems: z.boolean().optional(),
+    startDeadlineReminderLogs: z.boolean().optional(),
     _count: z.boolean().optional()
   }).strict();
 

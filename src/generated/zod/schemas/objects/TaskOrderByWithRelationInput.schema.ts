@@ -8,7 +8,8 @@ import { TaskFieldOrderByRelationAggregateInputObjectSchema as TaskFieldOrderByR
 import { InspectionOrderByRelationAggregateInputObjectSchema as InspectionOrderByRelationAggregateInputObjectSchema } from './InspectionOrderByRelationAggregateInput.schema';
 import { PortaChecklistOrderByWithRelationInputObjectSchema as PortaChecklistOrderByWithRelationInputObjectSchema } from './PortaChecklistOrderByWithRelationInput.schema';
 import { LibraOrderByWithRelationInputObjectSchema as LibraOrderByWithRelationInputObjectSchema } from './LibraOrderByWithRelationInput.schema';
-import { TaskEventOrderByRelationAggregateInputObjectSchema as TaskEventOrderByRelationAggregateInputObjectSchema } from './TaskEventOrderByRelationAggregateInput.schema'
+import { TaskEventOrderByRelationAggregateInputObjectSchema as TaskEventOrderByRelationAggregateInputObjectSchema } from './TaskEventOrderByRelationAggregateInput.schema';
+import { StartDeadlineReminderLogOrderByRelationAggregateInputObjectSchema as StartDeadlineReminderLogOrderByRelationAggregateInputObjectSchema } from './StartDeadlineReminderLogOrderByRelationAggregateInput.schema'
 
 const makeSchema = () => z.object({
   id: SortOrderSchema.optional(),
@@ -26,6 +27,7 @@ const makeSchema = () => z.object({
   isPickUp: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   accepted: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   hanging: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
+  parkingSpot: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   assignedUserId: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   assignedUserId2: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   submittedUserId: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
@@ -35,7 +37,8 @@ const makeSchema = () => z.object({
   inspections: z.lazy(() => InspectionOrderByRelationAggregateInputObjectSchema).optional(),
   portaChecklist: z.lazy(() => PortaChecklistOrderByWithRelationInputObjectSchema).optional(),
   libra: z.lazy(() => LibraOrderByWithRelationInputObjectSchema).optional(),
-  events: z.lazy(() => TaskEventOrderByRelationAggregateInputObjectSchema).optional()
+  events: z.lazy(() => TaskEventOrderByRelationAggregateInputObjectSchema).optional(),
+  startDeadlineReminderLogs: z.lazy(() => StartDeadlineReminderLogOrderByRelationAggregateInputObjectSchema).optional()
 }).strict();
 export const TaskOrderByWithRelationInputObjectSchema: z.ZodType<Prisma.TaskOrderByWithRelationInput> = makeSchema() as unknown as z.ZodType<Prisma.TaskOrderByWithRelationInput>;
 export const TaskOrderByWithRelationInputObjectZodSchema = makeSchema();

@@ -76,6 +76,7 @@ const taskPatchRequestSchema = z
     lng: z.number().optional(),
     isPickUp: z.boolean().optional(),
     accepted: z.boolean().optional(),
+    parkingSpot: z.string().nullable().optional(),
     assignedUserId: z.string().optional(),
     assignedUserId2: z.string().optional(),
     submittedUserId: z.string().optional(),

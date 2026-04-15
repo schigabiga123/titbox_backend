@@ -8,7 +8,8 @@ export const ProjectModelSchema = z.object({
     updatedAt: z.date().nullable(),
     tasks: z.array(z.unknown()),
     syncLogs: z.array(z.unknown()),
-    syncLogItems: z.array(z.unknown())
+    syncLogItems: z.array(z.unknown()),
+    startDeadlineReminderLogs: z.array(z.unknown())
 }).strict();
 
 export type ProjectPureType = z.infer<typeof ProjectModelSchema>;

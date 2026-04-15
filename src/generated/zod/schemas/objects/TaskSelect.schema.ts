@@ -7,6 +7,7 @@ import { InspectionFindManySchema as InspectionFindManySchema } from '../findMan
 import { PortaChecklistArgsObjectSchema as PortaChecklistArgsObjectSchema } from './PortaChecklistArgs.schema';
 import { LibraArgsObjectSchema as LibraArgsObjectSchema } from './LibraArgs.schema';
 import { TaskEventFindManySchema as TaskEventFindManySchema } from '../findManyTaskEvent.schema';
+import { StartDeadlineReminderLogFindManySchema as StartDeadlineReminderLogFindManySchema } from '../findManyStartDeadlineReminderLog.schema';
 import { TaskCountOutputTypeArgsObjectSchema as TaskCountOutputTypeArgsObjectSchema } from './TaskCountOutputTypeArgs.schema'
 
 const makeSchema = () => z.object({
@@ -25,6 +26,7 @@ const makeSchema = () => z.object({
   isPickUp: z.boolean().optional(),
   accepted: z.boolean().optional(),
   hanging: z.boolean().optional(),
+  parkingSpot: z.boolean().optional(),
   assignedUserId: z.boolean().optional(),
   assignedUserId2: z.boolean().optional(),
   submittedUserId: z.boolean().optional(),
@@ -35,6 +37,7 @@ const makeSchema = () => z.object({
   portaChecklist: z.union([z.boolean(), z.lazy(() => PortaChecklistArgsObjectSchema)]).optional(),
   libra: z.union([z.boolean(), z.lazy(() => LibraArgsObjectSchema)]).optional(),
   events: z.union([z.boolean(), z.lazy(() => TaskEventFindManySchema)]).optional(),
+  startDeadlineReminderLogs: z.union([z.boolean(), z.lazy(() => StartDeadlineReminderLogFindManySchema)]).optional(),
   _count: z.union([z.boolean(), z.lazy(() => TaskCountOutputTypeArgsObjectSchema)]).optional()
 }).strict();
 export const TaskSelectObjectSchema: z.ZodType<Prisma.TaskSelect> = makeSchema() as unknown as z.ZodType<Prisma.TaskSelect>;

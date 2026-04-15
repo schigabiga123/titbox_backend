@@ -5,7 +5,8 @@ import { TaskFieldUncheckedCreateNestedManyWithoutTaskInputObjectSchema as TaskF
 import { InspectionUncheckedCreateNestedManyWithoutTaskInputObjectSchema as InspectionUncheckedCreateNestedManyWithoutTaskInputObjectSchema } from './InspectionUncheckedCreateNestedManyWithoutTaskInput.schema';
 import { PortaChecklistUncheckedCreateNestedOneWithoutTaskInputObjectSchema as PortaChecklistUncheckedCreateNestedOneWithoutTaskInputObjectSchema } from './PortaChecklistUncheckedCreateNestedOneWithoutTaskInput.schema';
 import { LibraUncheckedCreateNestedOneWithoutTaskInputObjectSchema as LibraUncheckedCreateNestedOneWithoutTaskInputObjectSchema } from './LibraUncheckedCreateNestedOneWithoutTaskInput.schema';
-import { TaskEventUncheckedCreateNestedManyWithoutTaskInputObjectSchema as TaskEventUncheckedCreateNestedManyWithoutTaskInputObjectSchema } from './TaskEventUncheckedCreateNestedManyWithoutTaskInput.schema'
+import { TaskEventUncheckedCreateNestedManyWithoutTaskInputObjectSchema as TaskEventUncheckedCreateNestedManyWithoutTaskInputObjectSchema } from './TaskEventUncheckedCreateNestedManyWithoutTaskInput.schema';
+import { StartDeadlineReminderLogUncheckedCreateNestedManyWithoutTaskInputObjectSchema as StartDeadlineReminderLogUncheckedCreateNestedManyWithoutTaskInputObjectSchema } from './StartDeadlineReminderLogUncheckedCreateNestedManyWithoutTaskInput.schema'
 
 const makeSchema = () => z.object({
   id: z.string().optional(),
@@ -23,6 +24,7 @@ const makeSchema = () => z.object({
   isPickUp: z.boolean().optional().nullable(),
   accepted: z.boolean().optional().nullable(),
   hanging: z.boolean().optional().nullable(),
+  parkingSpot: z.string().optional().nullable(),
   assignedUserId: z.string().optional().nullable(),
   assignedUserId2: z.string().optional().nullable(),
   submittedUserId: z.string().optional().nullable(),
@@ -31,7 +33,8 @@ const makeSchema = () => z.object({
   inspections: z.lazy(() => InspectionUncheckedCreateNestedManyWithoutTaskInputObjectSchema),
   portaChecklist: z.lazy(() => PortaChecklistUncheckedCreateNestedOneWithoutTaskInputObjectSchema).optional(),
   libra: z.lazy(() => LibraUncheckedCreateNestedOneWithoutTaskInputObjectSchema).optional(),
-  events: z.lazy(() => TaskEventUncheckedCreateNestedManyWithoutTaskInputObjectSchema)
+  events: z.lazy(() => TaskEventUncheckedCreateNestedManyWithoutTaskInputObjectSchema),
+  startDeadlineReminderLogs: z.lazy(() => StartDeadlineReminderLogUncheckedCreateNestedManyWithoutTaskInputObjectSchema)
 }).strict();
 export const TaskUncheckedCreateInputObjectSchema: z.ZodType<Prisma.TaskUncheckedCreateInput> = makeSchema() as unknown as z.ZodType<Prisma.TaskUncheckedCreateInput>;
 export const TaskUncheckedCreateInputObjectZodSchema = makeSchema();

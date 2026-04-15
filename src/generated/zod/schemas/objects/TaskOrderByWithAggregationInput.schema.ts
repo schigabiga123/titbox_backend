@@ -24,6 +24,7 @@ const makeSchema = () => z.object({
   isPickUp: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   accepted: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   hanging: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
+  parkingSpot: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   assignedUserId: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   assignedUserId2: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   submittedUserId: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
