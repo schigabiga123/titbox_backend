@@ -76,6 +76,7 @@ export type ProjectSearchFilters = {
   szfCode?: string
   portaNumber?: 1 | 2,
   orderBy?: "ASC" | "DESC"
+  assignedUserId?: string
   task?: {
     deadlineAfter?: Date
     assignedUserId?: string
@@ -403,6 +404,19 @@ export async function searchProjects(
       title: {
         contains: filters.szfCode,
         mode: "insensitive",
+      },
+    })
+  }
+
+  if (filters.assignedUserId) {
+    projectAndConditions.push({
+      tasks: {
+        some: {
+          OR: [
+            { assignedUserId: filters.assignedUserId },
+            { assignedUserId2: filters.assignedUserId },
+          ],
+        },
       },
     })
   }

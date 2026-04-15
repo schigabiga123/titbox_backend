@@ -663,6 +663,14 @@ function parseProjectSearchFilters(rawValue: unknown): ProjectSearchFilters | un
     result.orderBy = searchObject.orderBy
   }
 
+  if (searchObject.assignedUserId !== undefined) {
+    if (!isNonEmptyString(searchObject.assignedUserId)) {
+      throw new HttpError(400, "'search.assignedUserId' must be a non-empty string")
+    }
+
+    result.assignedUserId = searchObject.assignedUserId
+  }
+
   if (searchObject.task !== undefined) {
     if (
       searchObject.task === null ||
