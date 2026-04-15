@@ -312,6 +312,37 @@ type SendStartDeadlineReminderNotificationInput = {
   assignedUserId?: string | null
 }
 
+type SendTaskEventCreatedNotificationInput = {
+  projectId: string
+  taskId: string
+  projectTitle: string
+  submittedUserId?: string | null
+  eventName: string
+  fields: Array<{
+    name: string
+    data?: string | null
+  }>
+}
+
+function formatTaskEventFieldsForNotification(
+  fields: Array<{
+    name: string
+    data?: string | null
+  }>
+) {
+  const fieldLines = fields
+    .map((field) => {
+      const normalizedName = field.name.trim()
+      const normalizedData =
+        typeof field.data === "string" && field.data.trim().length > 0 ? field.data.trim() : "-"
+
+      return normalizedName.length > 0 ? `${normalizedName}: ${normalizedData}` : null
+    })
+    .filter((line): line is string => Boolean(line))
+
+  return fieldLines.length > 0 ? fieldLines.join("\n") : "Nincs megadott adat."
+}
+
 export async function sendCommentCreatedNotification(
   input: SendCommentCreatedNotificationInput
 ) {
@@ -433,4 +464,24 @@ export async function sendStartDeadlineReminderNotification(
       }
     )
   }
+}
+
+export async function sendTaskEventCreatedNotification(
+  input: SendTaskEventCreatedNotificationInput
+) {
+  if (!input.submittedUserId) {
+    return
+  }
+
+  await sendPushToUsers(
+    input.projectId,
+    [input.submittedUserId],
+    {
+      title: `${input.eventName} - ${input.projectTitle}`,
+      body: formatTaskEventFieldsForNotification(input.fields),
+    },
+    {
+      subTaskId: input.taskId,
+    }
+  )
 }

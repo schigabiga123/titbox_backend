@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client"
 import {
   sendCommentCreatedNotification,
+  sendTaskEventCreatedNotification,
   sendTaskStatusChangedNotification,
 } from "./notification.service"
 
@@ -993,14 +994,23 @@ export async function createLibraByTaskId(taskId: string, input: LibraInput) {
 export async function createTaskEventByTaskId(taskId: string, input: TaskEventInput) {
   const task = await prisma.task.findUnique({
     where: { id: taskId },
-    select: { id: true },
+    select: {
+      id: true,
+      projectId: true,
+      submittedUserId: true,
+      project: {
+        select: {
+          title: true,
+        },
+      },
+    },
   })
 
   if (!task) {
     return undefined
   }
 
-  return prisma.taskEvent.create({
+  const createdTaskEvent = await prisma.taskEvent.create({
     data: {
       id: input.id,
       taskId: task.id,
@@ -1032,6 +1042,26 @@ export async function createTaskEventByTaskId(taskId: string, input: TaskEventIn
       },
     },
   })
+
+  if (createdTaskEvent.name === "Akasztás") {
+    try {
+      await sendTaskEventCreatedNotification({
+        projectId: task.projectId,
+        taskId: task.id,
+        projectTitle: task.project.title,
+        submittedUserId: task.submittedUserId,
+        eventName: createdTaskEvent.name,
+        fields: createdTaskEvent.fields.map((field) => ({
+          name: field.name,
+          data: field.data,
+        })),
+      })
+    } catch (error) {
+      console.error("Failed to send task event created notification push", error)
+    }
+  }
+
+  return createdTaskEvent
 }
 
 type CreateTaskCommentInput = {
