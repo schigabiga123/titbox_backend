@@ -220,6 +220,20 @@ const libraRequestSchema = z
   })
   .openapi("LibraRequest");
 
+const notificationLogResponseSchema = z
+  .object({
+    id: z.string(),
+    createdAt: z.string().datetime(),
+    userId: z.string(),
+    notification: z.unknown(),
+    taskId: z.string(),
+    subTaskId: z.string().nullable(),
+    commentId: z.string().nullable(),
+    finished: z.boolean(),
+    deadline: z.boolean(),
+  })
+  .openapi("NotificationLogResponse");
+
 registry.registerPath({
   method: "get",
   path: "/projects",
@@ -878,6 +892,35 @@ registry.registerPath({
     },
     404: {
       description: "Attachment not found",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+  },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/notifications/{userId}",
+  tags: ["Notification"],
+  request: {
+    params: z.object({
+      userId: z.string().min(1),
+    }),
+  },
+  responses: {
+    200: {
+      description: "Notifications by user id, newest first",
+      content: {
+        "application/json": {
+          schema: z.array(notificationLogResponseSchema),
+        },
+      },
+    },
+    400: {
+      description: "Invalid user id",
       content: {
         "application/json": {
           schema: defaultErrorSchema,

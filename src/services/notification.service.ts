@@ -190,6 +190,17 @@ async function logNotificationToDb(input: LogNotificationInput) {
   }
 }
 
+export async function getNotificationsByUserId(userId: string) {
+  return prisma.notificationLog.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  })
+}
+
 export async function sendPushToUsers(
   taskId: string,
   userIds: string[],

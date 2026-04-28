@@ -443,6 +443,9 @@ export async function searchProjects(
   const deadlineOrder = filters.orderBy ?? "DESC"
   const projectAndConditions: ProjectWhereInput[] = []
   let taskIncludeWhere: TaskIncludeWhereInput | undefined
+  const shouldReturnWholeProjectPackage =
+    typeof filters.task?.pickupAddressContains === "string" ||
+    typeof filters.task?.deliveryAddressContains === "string"
 
   if (filters.projectTitleContains) {
     projectAndConditions.push({
@@ -589,7 +592,11 @@ export async function searchProjects(
     projectAndConditions.push({
       tasks: { some: taskWhere },
     })
-    if (filters.portaNumber !== 1 && filters.portaNumber !== 2) {
+    if (
+      filters.portaNumber !== 1 &&
+      filters.portaNumber !== 2 &&
+      !shouldReturnWholeProjectPackage
+    ) {
       taskIncludeWhere = taskWhere
     }
   }
