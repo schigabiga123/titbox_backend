@@ -4,8 +4,10 @@ import {
   sendTaskEventCreatedNotification,
   sendTaskStatusChangedNotification,
 } from "./notification.service"
+import { HttpError } from "../middlewares/error.middleware"
 
 const prisma = new PrismaClient()
+const PLOMBA_FIELD_NAME = "plomba"
 
 type AttachmentInput = {
   url: string
@@ -833,16 +835,78 @@ export async function patchTaskFieldById(
 
   try {
     return await prisma.$transaction(async (tx) => {
-      if (attachments !== undefined) {
-        const existingField = await tx.taskField.findUnique({
-          where: { id },
-          select: { id: true },
-        })
+      const existingField = await tx.taskField.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          name: true,
+          data: true,
+          task: {
+            select: {
+              projectId: true,
+              isPickUp: true,
+            },
+          },
+        },
+      })
 
-        if (!existingField) {
-          return undefined
+      if (!existingField) {
+        return undefined
+      }
+
+      const hasDataPatch = Object.prototype.hasOwnProperty.call(sanitizedPatchData, "data")
+      const hasNamePatch = Object.prototype.hasOwnProperty.call(sanitizedPatchData, "name")
+      const nextFieldName =
+        typeof sanitizedPatchData.name === "string"
+          ? sanitizedPatchData.name
+          : existingField.name
+      const nextFieldData =
+        hasDataPatch &&
+        (typeof sanitizedPatchData.data === "string" || sanitizedPatchData.data === null)
+          ? sanitizedPatchData.data
+          : existingField.data
+
+      if (
+        (hasDataPatch || hasNamePatch) &&
+        nextFieldName === PLOMBA_FIELD_NAME &&
+        typeof nextFieldData === "string" &&
+        nextFieldData.length > 0
+      ) {
+        let skipDuplicateCheck = false
+
+        if (existingField.task.isPickUp === false) {
+          const pickupPlomba = await tx.taskField.findFirst({
+            where: {
+              name: PLOMBA_FIELD_NAME,
+              task: {
+                projectId: existingField.task.projectId,
+                isPickUp: true,
+              },
+              AND: [{ data: { not: null } }, { data: { not: "" } }],
+            },
+            select: { id: true },
+          })
+
+          skipDuplicateCheck = pickupPlomba !== null
         }
 
+        if (!skipDuplicateCheck) {
+          const duplicatePlomba = await tx.taskField.findFirst({
+            where: {
+              id: { not: existingField.id },
+              name: PLOMBA_FIELD_NAME,
+              data: nextFieldData,
+            },
+            select: { id: true },
+          })
+
+          if (duplicatePlomba) {
+            throw new HttpError(409, "Ez a plombaszám már használatban van")
+          }
+        }
+      }
+
+      if (attachments !== undefined) {
         if (Object.keys(sanitizedPatchData).length > 0) {
           await tx.taskField.update({
             where: { id },
