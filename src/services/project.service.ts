@@ -8,6 +8,7 @@ import { HttpError } from "../middlewares/error.middleware"
 
 const prisma = new PrismaClient()
 const PLOMBA_FIELD_NAME = "plomba"
+const IGNORED_PLOMBA_FIELD_DATA = "-"
 
 type AttachmentInput = {
   url: string
@@ -870,7 +871,8 @@ export async function patchTaskFieldById(
         (hasDataPatch || hasNamePatch) &&
         nextFieldName === PLOMBA_FIELD_NAME &&
         typeof nextFieldData === "string" &&
-        nextFieldData.length > 0
+        nextFieldData.length > 0 &&
+        nextFieldData !== IGNORED_PLOMBA_FIELD_DATA
       ) {
         let skipDuplicateCheck = false
 
@@ -882,7 +884,11 @@ export async function patchTaskFieldById(
                 projectId: existingField.task.projectId,
                 isPickUp: true,
               },
-              AND: [{ data: { not: null } }, { data: { not: "" } }],
+              AND: [
+                { data: { not: null } },
+                { data: { not: "" } },
+                { data: { not: IGNORED_PLOMBA_FIELD_DATA } },
+              ],
             },
             select: { id: true },
           })
@@ -901,7 +907,10 @@ export async function patchTaskFieldById(
           })
 
           if (duplicatePlomba) {
-            throw new HttpError(409, "Ez a plombaszám már használatban van")
+            throw new HttpError(
+              409,
+              `Ez a plombaszám már használatban van: ${nextFieldData}. Tölts fel egy új plombát.`
+            )
           }
         }
       }
