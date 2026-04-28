@@ -9,6 +9,7 @@ import { TaskEventFieldUpdateManyWithoutTaskEventNestedInputObjectSchema as Task
 const makeSchema = () => z.object({
   id: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)]).optional(),
   name: z.union([z.string(), z.lazy(() => NullableStringFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
+  status: z.union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)]).optional(),
   createdAt: z.union([z.coerce.date(), z.lazy(() => NullableDateTimeFieldUpdateOperationsInputObjectSchema)]).optional().nullable(),
   task: z.lazy(() => TaskUpdateOneRequiredWithoutEventsNestedInputObjectSchema).optional(),
   fields: z.lazy(() => TaskEventFieldUpdateManyWithoutTaskEventNestedInputObjectSchema).optional()

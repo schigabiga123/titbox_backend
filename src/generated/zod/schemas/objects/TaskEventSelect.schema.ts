@@ -8,6 +8,7 @@ const makeSchema = () => z.object({
   id: z.boolean().optional(),
   taskId: z.boolean().optional(),
   name: z.boolean().optional(),
+  status: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   task: z.union([z.boolean(), z.lazy(() => TaskArgsObjectSchema)]).optional(),
   fields: z.union([z.boolean(), z.lazy(() => TaskEventFieldFindManySchema)]).optional(),

@@ -10,6 +10,7 @@ const makeSchema = () => z.object({
   id: SortOrderSchema.optional(),
   taskId: SortOrderSchema.optional(),
   name: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
+  status: SortOrderSchema.optional(),
   createdAt: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   _count: z.lazy(() => TaskEventCountOrderByAggregateInputObjectSchema).optional(),
   _max: z.lazy(() => TaskEventMaxOrderByAggregateInputObjectSchema).optional(),

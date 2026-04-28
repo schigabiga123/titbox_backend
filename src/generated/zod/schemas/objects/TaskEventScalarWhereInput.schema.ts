@@ -11,6 +11,7 @@ const taskeventscalarwhereinputSchema = z.object({
   id: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
   taskId: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
   name: z.union([z.lazy(() => StringNullableFilterObjectSchema), z.string()]).optional().nullable(),
+  status: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
   createdAt: z.union([z.lazy(() => DateTimeNullableFilterObjectSchema), z.coerce.date()]).optional().nullable()
 }).strict();
 export const TaskEventScalarWhereInputObjectSchema: z.ZodType<Prisma.TaskEventScalarWhereInput> = taskeventscalarwhereinputSchema as unknown as z.ZodType<Prisma.TaskEventScalarWhereInput>;

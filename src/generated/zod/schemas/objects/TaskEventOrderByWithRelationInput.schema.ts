@@ -9,6 +9,7 @@ const makeSchema = () => z.object({
   id: SortOrderSchema.optional(),
   taskId: SortOrderSchema.optional(),
   name: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
+  status: SortOrderSchema.optional(),
   createdAt: z.union([SortOrderSchema, z.lazy(() => SortOrderInputObjectSchema)]).optional(),
   task: z.lazy(() => TaskOrderByWithRelationInputObjectSchema).optional(),
   fields: z.lazy(() => TaskEventFieldOrderByRelationAggregateInputObjectSchema).optional()

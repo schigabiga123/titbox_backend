@@ -6,6 +6,7 @@ import { TaskEventFieldCreateNestedManyWithoutTaskEventInputObjectSchema as Task
 const makeSchema = () => z.object({
   id: z.string().optional(),
   name: z.string().optional().nullable(),
+  status: z.string().optional(),
   createdAt: z.coerce.date().optional().nullable(),
   task: z.lazy(() => TaskCreateNestedOneWithoutEventsInputObjectSchema),
   fields: z.lazy(() => TaskEventFieldCreateNestedManyWithoutTaskEventInputObjectSchema)

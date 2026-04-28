@@ -7,6 +7,7 @@ import {
   createInspectionsByTaskId,
   createLibraByTaskId,
   createTaskEventByTaskId,
+  createTaskEventFieldByTaskEventId,
   createTaskFieldByTaskId,
   createPortaChecklistByTaskId,
   deleteAttachmentById,
@@ -14,6 +15,8 @@ import {
   getProjects,
   patchPortaChecklistById,
   patchTaskById,
+  patchTaskEventById,
+  patchTaskEventFieldById,
   patchTaskFieldById,
   patchInspectionById,
   ProjectSearchFilters,
@@ -31,6 +34,12 @@ type AttachmentInput = {
 type TaskFieldPatchInput = Prisma.TaskFieldUncheckedUpdateInput & {
   attachments?: AttachmentInput[]
 }
+
+type TaskEventFieldPatchInput = Prisma.TaskEventFieldUncheckedUpdateInput & {
+  attachments?: AttachmentInput[]
+}
+
+type TaskEventPatchInput = Prisma.TaskEventUncheckedUpdateInput
 
 type InspectionPatchInput = Prisma.InspectionUncheckedUpdateInput
 type PortaChecklistPatchInput = Prisma.PortaChecklistUncheckedUpdateInput
@@ -85,9 +94,12 @@ type TaskEventFieldCreateInput = {
 type TaskEventCreateInput = {
   id?: string
   name?: string | null
+  status?: "doing" | "completed"
   createdAt?: Date | null
-  fields: TaskEventFieldCreateInput[]
+  fields?: TaskEventFieldCreateInput[]
 }
+
+const TASK_EVENT_STATUSES = new Set(["doing", "completed"])
 
 function parseIntQueryParam(
   value: unknown,
@@ -516,7 +528,7 @@ function parseCreateTaskEventBody(rawBody: unknown): TaskEventCreateInput {
   }
 
   const body = rawBody as Record<string, unknown>
-  const allowedFields = new Set(["id", "name", "createdAt", "fields"])
+  const allowedFields = new Set(["id", "name", "status", "createdAt", "fields"])
 
   for (const field of Object.keys(body)) {
     if (!allowedFields.has(field)) {
@@ -534,6 +546,15 @@ function parseCreateTaskEventBody(rawBody: unknown): TaskEventCreateInput {
 
   const name = parseNullableStringField(body, "name")
 
+  let status: "doing" | "completed" | undefined
+  if (body.status !== undefined) {
+    if (typeof body.status !== "string" || !TASK_EVENT_STATUSES.has(body.status)) {
+      throw new HttpError(400, "'status' must be either 'doing' or 'completed'")
+    }
+
+    status = body.status as "doing" | "completed"
+  }
+
   let createdAt: Date | null | undefined
   if (body.createdAt !== undefined) {
     if (body.createdAt === null) {
@@ -549,17 +570,18 @@ function parseCreateTaskEventBody(rawBody: unknown): TaskEventCreateInput {
     }
   }
 
-  if (!Array.isArray(body.fields) || body.fields.length === 0) {
-    throw new HttpError(400, "'fields' must be a non-empty array")
+  if (body.fields !== undefined && !Array.isArray(body.fields)) {
+    throw new HttpError(400, "'fields' must be an array")
   }
 
   return {
     id,
     name,
+    status,
     createdAt,
-    fields: body.fields.map((field, index) =>
-      parseTaskEventField(field, `fields[${index}]`)
-    ),
+    fields: Array.isArray(body.fields)
+      ? body.fields.map((field, index) => parseTaskEventField(field, `fields[${index}]`))
+      : [],
   }
 }
 
@@ -945,6 +967,23 @@ const taskFieldPatchFields: Record<string, PatchFieldDefinition> = {
   attachments: { type: "attachments" },
 }
 
+const taskEventFieldPatchFields: Record<string, PatchFieldDefinition> = {
+  id: { type: "string", nonEmpty: true },
+  taskEventId: { type: "string", nonEmpty: true },
+  name: { type: "string", nonEmpty: true },
+  data: { type: "nullableString" },
+  type: { type: "nullableString" },
+  attachments: { type: "attachments" },
+}
+
+const taskEventPatchFields: Record<string, PatchFieldDefinition> = {
+  id: { type: "string", nonEmpty: true },
+  taskId: { type: "string", nonEmpty: true },
+  name: { type: "nullableString" },
+  status: { type: "string", nonEmpty: true },
+  createdAt: { type: "nullableDate" },
+}
+
 const inspectionPatchFields: Record<string, PatchFieldDefinition> = {
   id: { type: "string", nonEmpty: true },
   taskId: { type: "string", nonEmpty: true },
@@ -1039,6 +1078,62 @@ export async function patchTaskFieldByIdHandler(
   }
 }
 
+export async function patchTaskEventFieldByIdHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const id = parseIdParam(req, "id")
+    const patchData = parsePatchBody<TaskEventFieldPatchInput>(req.body, taskEventFieldPatchFields)
+    const updatedField = await patchTaskEventFieldById(id, patchData)
+
+    if (updatedField === undefined) {
+      throw new HttpError(404, `Task event field not found for id: '${id}'`)
+    }
+
+    if (updatedField === null) {
+      throw new HttpError(400, "No patchable fields provided")
+    }
+
+    res.json(updatedField)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function patchTaskEventByIdHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const id = parseIdParam(req, "id")
+    const patchData = parsePatchBody<TaskEventPatchInput>(req.body, taskEventPatchFields)
+
+    if (
+      patchData.status !== undefined &&
+      (typeof patchData.status !== "string" || !TASK_EVENT_STATUSES.has(patchData.status))
+    ) {
+      throw new HttpError(400, "'status' must be either 'doing' or 'completed'")
+    }
+
+    const updatedTaskEvent = await patchTaskEventById(id, patchData)
+
+    if (updatedTaskEvent === undefined) {
+      throw new HttpError(404, `Task event not found for id: '${id}'`)
+    }
+
+    if (updatedTaskEvent === null) {
+      throw new HttpError(400, "No patchable fields provided")
+    }
+
+    res.json(updatedTaskEvent)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export async function createCommentByTaskIdHandler(
   req: Request,
   res: Response,
@@ -1094,6 +1189,26 @@ export async function createTaskEventByTaskIdHandler(
     }
 
     res.status(201).json(createdTaskEvent)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function createTaskEventFieldByTaskEventIdHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const id = parseIdParam(req, "id")
+    const taskEventFieldInput = parseTaskEventField(req.body, "body")
+    const createdTaskEventField = await createTaskEventFieldByTaskEventId(id, taskEventFieldInput)
+
+    if (!createdTaskEventField) {
+      throw new HttpError(404, `Task event not found for id: '${id}'`)
+    }
+
+    res.status(201).json(createdTaskEventField)
   } catch (error) {
     next(error)
   }

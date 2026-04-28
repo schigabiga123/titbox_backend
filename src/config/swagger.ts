@@ -95,6 +95,27 @@ const taskFieldPatchRequestSchema = z
   })
   .openapi("TaskFieldPatchRequest");
 
+const taskEventFieldPatchRequestSchema = z
+  .object({
+    id: z.string().min(1).optional(),
+    taskEventId: z.string().min(1).optional(),
+    name: z.string().min(1).optional(),
+    data: z.string().nullable().optional(),
+    type: z.string().nullable().optional(),
+    attachments: z.array(attachmentSchema).optional(),
+  })
+  .openapi("TaskEventFieldPatchRequest");
+
+const taskEventPatchRequestSchema = z
+  .object({
+    id: z.string().min(1).optional(),
+    taskId: z.string().min(1).optional(),
+    name: z.string().nullable().optional(),
+    status: z.enum(["doing", "completed"]).optional(),
+    createdAt: z.string().datetime().nullable().optional(),
+  })
+  .openapi("TaskEventPatchRequest");
+
 const createTaskFieldRequestSchema = z
   .object({
     id: z.string().min(1).optional(),
@@ -128,8 +149,9 @@ const createTaskEventRequestSchema = z
   .object({
     id: z.string().min(1).optional(),
     name: z.string().nullable().optional(),
+    status: z.enum(["doing", "completed"]).optional(),
     createdAt: z.string().datetime().nullable().optional(),
-    fields: z.array(createTaskEventFieldRequestSchema).min(1),
+    fields: z.array(createTaskEventFieldRequestSchema).optional(),
   })
   .openapi("CreateTaskEventRequest");
 
@@ -353,6 +375,94 @@ registry.registerPath({
 });
 
 registry.registerPath({
+  method: "patch",
+  path: "/projects/event-fields/{id}",
+  tags: ["Project"],
+  request: {
+    params: z.object({
+      id: z.string().min(1),
+    }),
+    body: {
+      content: {
+        "application/json": {
+          schema: taskEventFieldPatchRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Patched task event field",
+      content: {
+        "application/json": {
+          schema: z.unknown(),
+        },
+      },
+    },
+    400: {
+      description: "Invalid patch payload",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+    404: {
+      description: "Task event field not found",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+  },
+});
+
+registry.registerPath({
+  method: "patch",
+  path: "/projects/events/{id}",
+  tags: ["Project"],
+  request: {
+    params: z.object({
+      id: z.string().min(1),
+    }),
+    body: {
+      content: {
+        "application/json": {
+          schema: taskEventPatchRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Patched task event",
+      content: {
+        "application/json": {
+          schema: z.unknown(),
+        },
+      },
+    },
+    400: {
+      description: "Invalid patch payload",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+    404: {
+      description: "Task event not found",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+  },
+});
+
+registry.registerPath({
   method: "post",
   path: "/projects/tasks/{id}/comments",
   tags: ["Project"],
@@ -431,6 +541,50 @@ registry.registerPath({
     },
     404: {
       description: "Task not found",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+  },
+});
+
+registry.registerPath({
+  method: "post",
+  path: "/projects/events/{id}/fields",
+  tags: ["Project"],
+  request: {
+    params: z.object({
+      id: z.string().min(1),
+    }),
+    body: {
+      content: {
+        "application/json": {
+          schema: createTaskEventFieldRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      description: "Created task event field",
+      content: {
+        "application/json": {
+          schema: z.unknown(),
+        },
+      },
+    },
+    400: {
+      description: "Invalid create task event field payload",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+    404: {
+      description: "Task event not found",
       content: {
         "application/json": {
           schema: defaultErrorSchema,

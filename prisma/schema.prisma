@@ -258,6 +258,7 @@ model TaskEvent {
   id        String   @id @default(uuid())
   taskId    String
   name      String?
+  status    String   @default("doing")
   createdAt DateTime?
 
   task   Task             @relation(fields: [taskId], references: [id], onDelete: Cascade)

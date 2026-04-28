@@ -4,6 +4,7 @@ export const TaskEventInputSchema = z.object({
     id: z.string(),
     taskId: z.string(),
     name: z.string().optional().nullable(),
+    status: z.string(),
     createdAt: z.date().optional().nullable(),
     task: z.unknown(),
     fields: z.array(z.unknown())

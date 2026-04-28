@@ -1,0 +1,1 @@
+ALTER TABLE "TaskEvent" ADD COLUMN "status" TEXT NOT NULL DEFAULT 'doing';

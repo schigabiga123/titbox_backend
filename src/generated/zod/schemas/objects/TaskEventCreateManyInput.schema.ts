@@ -6,6 +6,7 @@ const makeSchema = () => z.object({
   id: z.string().optional(),
   taskId: z.string(),
   name: z.string().optional().nullable(),
+  status: z.string().optional(),
   createdAt: z.coerce.date().optional().nullable()
 }).strict();
 export const TaskEventCreateManyInputObjectSchema: z.ZodType<Prisma.TaskEventCreateManyInput> = makeSchema() as unknown as z.ZodType<Prisma.TaskEventCreateManyInput>;

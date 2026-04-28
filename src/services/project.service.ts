@@ -62,8 +62,9 @@ type TaskEventFieldInput = {
 type TaskEventInput = {
   id?: string
   name?: string | null
+  status?: "doing" | "completed"
   createdAt?: Date | null
-  fields: TaskEventFieldInput[]
+  fields?: TaskEventFieldInput[]
 }
 
 type PaginationInput = {
@@ -118,6 +119,59 @@ function endOfDay(date: Date) {
   const nextDate = new Date(date)
   nextDate.setHours(23, 59, 59, 999)
   return nextDate
+}
+
+async function sendCompletedAkasztasNotification(taskEventId: string) {
+  const taskEvent = await prisma.taskEvent.findUnique({
+    where: { id: taskEventId },
+    select: {
+      id: true,
+      name: true,
+      status: true,
+      fields: {
+        select: {
+          name: true,
+          data: true,
+        },
+      },
+      task: {
+        select: {
+          id: true,
+          projectId: true,
+          submittedUserId: true,
+          project: {
+            select: {
+              title: true,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  if (
+    !taskEvent ||
+    taskEvent.name !== "Akasztás" ||
+    taskEvent.status !== "completed"
+  ) {
+    return
+  }
+
+  try {
+    await sendTaskEventCreatedNotification({
+      projectId: taskEvent.task.projectId,
+      taskId: taskEvent.task.id,
+      projectTitle: taskEvent.task.project.title,
+      submittedUserId: taskEvent.task.submittedUserId,
+      eventName: taskEvent.name,
+      fields: taskEvent.fields.map((field) => ({
+        name: field.name,
+        data: field.data,
+      })),
+    })
+  } catch (error) {
+    console.error("Failed to send task event created notification push", error)
+  }
 }
 
 function buildProjectInclude(taskWhere?: TaskIncludeWhereInput) {
@@ -698,6 +752,65 @@ export async function patchTaskById(
   }
 }
 
+export async function patchTaskEventById(
+  id: string,
+  patchData: Prisma.TaskEventUncheckedUpdateInput
+) {
+  const sanitizedPatchData = removeUndefinedProperties(
+    patchData as Record<string, unknown>
+  ) as Prisma.TaskEventUncheckedUpdateInput
+
+  if (Object.keys(sanitizedPatchData).length === 0) {
+    return null
+  }
+
+  try {
+    const existingTaskEvent = await prisma.taskEvent.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        status: true,
+      },
+    })
+
+    if (!existingTaskEvent) {
+      return undefined
+    }
+
+    const updatedTaskEvent = await prisma.taskEvent.update({
+      where: { id },
+      data: sanitizedPatchData,
+      include: {
+        fields: {
+          include: {
+            attachments: true,
+          },
+        },
+      },
+    })
+
+    if (
+      existingTaskEvent.name === "Akasztás" &&
+      existingTaskEvent.status !== "completed" &&
+      updatedTaskEvent.status === "completed"
+    ) {
+      await sendCompletedAkasztasNotification(updatedTaskEvent.id)
+    }
+
+    return updatedTaskEvent
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      return undefined
+    }
+
+    throw error
+  }
+}
+
 export async function patchTaskFieldById(
   id: string,
   patchData: Prisma.TaskFieldUncheckedUpdateInput & { attachments?: AttachmentInput[] }
@@ -790,6 +903,116 @@ export async function createTaskFieldByTaskId(taskId: string, input: TaskFieldIn
       name: input.name,
       data: input.data ?? null,
       type: input.type ?? null,
+    },
+    include: {
+      attachments: true,
+    },
+  })
+}
+
+export async function patchTaskEventFieldById(
+  id: string,
+  patchData: Prisma.TaskEventFieldUncheckedUpdateInput & { attachments?: AttachmentInput[] }
+) {
+  const { attachments, ...fieldPatchData } = patchData
+  const sanitizedPatchData = removeUndefinedProperties(
+    fieldPatchData as Record<string, unknown>
+  ) as Prisma.TaskEventFieldUncheckedUpdateInput
+
+  if (Object.keys(sanitizedPatchData).length === 0 && attachments === undefined) {
+    return null
+  }
+
+  try {
+    return await prisma.$transaction(async (tx) => {
+      if (attachments !== undefined) {
+        const existingField = await tx.taskEventField.findUnique({
+          where: { id },
+          select: { id: true },
+        })
+
+        if (!existingField) {
+          return undefined
+        }
+
+        if (Object.keys(sanitizedPatchData).length > 0) {
+          await tx.taskEventField.update({
+            where: { id },
+            data: sanitizedPatchData,
+          })
+        }
+
+        await tx.attachment.deleteMany({
+          where: { taskEventFieldId: id },
+        })
+
+        if (attachments.length > 0) {
+          await tx.attachment.createMany({
+            data: attachments.map((attachment) => ({
+              taskEventFieldId: id,
+              url: attachment.url,
+              type: attachment.type,
+            })),
+          })
+        }
+
+        return tx.taskEventField.findUnique({
+          where: { id },
+          include: {
+            attachments: true,
+          },
+        })
+      }
+
+      return tx.taskEventField.update({
+        where: { id },
+        data: sanitizedPatchData,
+        include: {
+          attachments: true,
+        },
+      })
+    })
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      return undefined
+    }
+
+    throw error
+  }
+}
+
+export async function createTaskEventFieldByTaskEventId(
+  taskEventId: string,
+  input: TaskEventFieldInput
+) {
+  const taskEvent = await prisma.taskEvent.findUnique({
+    where: { id: taskEventId },
+    select: { id: true },
+  })
+
+  if (!taskEvent) {
+    return undefined
+  }
+
+  return prisma.taskEventField.create({
+    data: {
+      id: input.id,
+      taskEventId: taskEvent.id,
+      name: input.name,
+      data: input.data ?? null,
+      type: input.type ?? null,
+      attachments:
+        input.attachments && input.attachments.length > 0
+          ? {
+              create: input.attachments.map((attachment) => ({
+                url: attachment.url,
+                type: attachment.type,
+              })),
+            }
+          : undefined,
     },
     include: {
       attachments: true,
@@ -1029,9 +1252,10 @@ export async function createTaskEventByTaskId(taskId: string, input: TaskEventIn
       id: input.id,
       taskId: task.id,
       name: input.name ?? null,
+      status: input.status ?? "doing",
       createdAt: input.createdAt ?? new Date(),
       fields: {
-        create: input.fields.map((field) => ({
+        create: (input.fields ?? []).map((field) => ({
           id: field.id,
           name: field.name,
           data: field.data ?? null,
@@ -1056,24 +1280,6 @@ export async function createTaskEventByTaskId(taskId: string, input: TaskEventIn
       },
     },
   })
-
-  if (createdTaskEvent.name === "Akasztás") {
-    try {
-      await sendTaskEventCreatedNotification({
-        projectId: task.projectId,
-        taskId: task.id,
-        projectTitle: task.project.title,
-        submittedUserId: task.submittedUserId,
-        eventName: createdTaskEvent.name,
-        fields: createdTaskEvent.fields.map((field) => ({
-          name: field.name,
-          data: field.data,
-        })),
-      })
-    } catch (error) {
-      console.error("Failed to send task event created notification push", error)
-    }
-  }
 
   return createdTaskEvent
 }

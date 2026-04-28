@@ -6,6 +6,7 @@ const makeSchema = () => z.object({
   id: SortOrderSchema.optional(),
   taskId: SortOrderSchema.optional(),
   name: SortOrderSchema.optional(),
+  status: SortOrderSchema.optional(),
   createdAt: SortOrderSchema.optional()
 }).strict();
 export const TaskEventMinOrderByAggregateInputObjectSchema: z.ZodType<Prisma.TaskEventMinOrderByAggregateInput> = makeSchema() as unknown as z.ZodType<Prisma.TaskEventMinOrderByAggregateInput>;
