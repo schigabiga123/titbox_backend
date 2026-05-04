@@ -218,6 +218,43 @@ function buildProjectInclude(taskWhere?: TaskIncludeWhereInput) {
   }
 }
 
+function buildTaskInclude() {
+  return {
+    comments: {
+      include: {
+        taggedUsers: true,
+        attachments: true,
+      },
+    },
+    fields: {
+      include: {
+        attachments: true,
+      },
+    },
+    inspections: true,
+    portaChecklist: true,
+    libra: {
+      include: {
+        taskField: {
+          include: {
+            attachments: true,
+          },
+        },
+      },
+    },
+    events: {
+      include: {
+        fields: {
+          include: {
+            attachments: true,
+          },
+        },
+      },
+    },
+    project: true,
+  }
+}
+
 function withTaggedUserIdsInProject(project: any) {
   return {
     ...project,
@@ -437,6 +474,69 @@ export async function getProjectById(id: string) {
   }
 
   return withTaggedUserIdsInProject(project)
+}
+
+export async function getTaskById(id: string) {
+  const task = await prisma.task.findUnique({
+    where: { id },
+    include: buildTaskInclude(),
+  })
+
+  if (!task) {
+    return null
+  }
+
+  return withTaggedUserIdsInTask(task)
+}
+
+export async function getProjectTaskPairByIds(
+  projectId: string,
+  pickupTaskId: string,
+  deliveryTaskId: string
+) {
+  const [project, pickupTask, deliveryTask] = await Promise.all([
+    prisma.project.findUnique({
+      where: { id: projectId },
+      include: buildProjectInclude(),
+    }),
+    prisma.task.findUnique({
+      where: { id: pickupTaskId },
+      include: buildTaskInclude(),
+    }),
+    prisma.task.findUnique({
+      where: { id: deliveryTaskId },
+      include: buildTaskInclude(),
+    }),
+  ])
+
+  if (!project) {
+    return { status: "project-not-found" as const }
+  }
+
+  if (!pickupTask) {
+    return { status: "pickup-not-found" as const }
+  }
+
+  if (!deliveryTask) {
+    return { status: "delivery-not-found" as const }
+  }
+
+  if (pickupTask.projectId !== project.id) {
+    return { status: "pickup-project-mismatch" as const }
+  }
+
+  if (deliveryTask.projectId !== project.id) {
+    return { status: "delivery-project-mismatch" as const }
+  }
+
+  return {
+    status: "ok" as const,
+    data: {
+      project: withTaggedUserIdsInProject(project),
+      pickup: withTaggedUserIdsInTask(pickupTask),
+      delivery: withTaggedUserIdsInTask(deliveryTask),
+    },
+  }
 }
 
 export async function searchProjects(

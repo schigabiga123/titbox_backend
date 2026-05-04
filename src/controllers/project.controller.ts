@@ -13,6 +13,8 @@ import {
   deleteAttachmentById,
   getProjectById,
   getProjects,
+  getProjectTaskPairByIds,
+  getTaskById,
   patchPortaChecklistById,
   patchTaskById,
   patchTaskEventById,
@@ -81,6 +83,12 @@ type TaskFieldCreateInput = {
   name: string
   data?: string | null
   type?: string | null
+}
+
+type ProjectTaskPairInput = {
+  projectId: string
+  pickupTaskId: string
+  deliveryTaskId: string
 }
 
 type TaskEventFieldCreateInput = {
@@ -479,6 +487,39 @@ function parseCreateTaskFieldBody(rawBody: unknown): TaskFieldCreateInput {
     name: body.name,
     data: parseNullableStringField(body, "data"),
     type: parseNullableStringField(body, "type"),
+  }
+}
+
+function parseProjectTaskPairBody(rawBody: unknown): ProjectTaskPairInput {
+  if (rawBody === null || typeof rawBody !== "object" || Array.isArray(rawBody)) {
+    throw new HttpError(400, "Request body must be a JSON object")
+  }
+
+  const body = rawBody as Record<string, unknown>
+  const allowedFields = new Set(["projectId", "pickupTaskId", "deliveryTaskId"])
+
+  for (const field of Object.keys(body)) {
+    if (!allowedFields.has(field)) {
+      throw new HttpError(400, `Unknown project task pair field: '${field}'`)
+    }
+  }
+
+  if (!isNonEmptyString(body.projectId)) {
+    throw new HttpError(400, "'projectId' must be a non-empty string")
+  }
+
+  if (!isNonEmptyString(body.pickupTaskId)) {
+    throw new HttpError(400, "'pickupTaskId' must be a non-empty string")
+  }
+
+  if (!isNonEmptyString(body.deliveryTaskId)) {
+    throw new HttpError(400, "'deliveryTaskId' must be a non-empty string")
+  }
+
+  return {
+    projectId: body.projectId,
+    pickupTaskId: body.pickupTaskId,
+    deliveryTaskId: body.deliveryTaskId,
   }
 }
 
@@ -1029,6 +1070,54 @@ export async function getProjectByIdHandler(req: Request, res: Response, next: N
     }
 
     res.json(project)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function getTaskByIdHandler(req: Request, res: Response, next: NextFunction) {
+  try {
+    const id = parseIdParam(req, "id")
+    const task = await getTaskById(id)
+
+    if (!task) {
+      throw new HttpError(404, `Task not found for id: '${id}'`)
+    }
+
+    res.json(task)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function getProjectTaskPairHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const input = parseProjectTaskPairBody(req.body)
+    const result = await getProjectTaskPairByIds(
+      input.projectId,
+      input.pickupTaskId,
+      input.deliveryTaskId
+    )
+
+    switch (result.status) {
+      case "ok":
+        res.json(result.data)
+        return
+      case "project-not-found":
+        throw new HttpError(404, `Project not found for id: '${input.projectId}'`)
+      case "pickup-not-found":
+        throw new HttpError(404, `Pickup task not found for id: '${input.pickupTaskId}'`)
+      case "delivery-not-found":
+        throw new HttpError(404, `Delivery task not found for id: '${input.deliveryTaskId}'`)
+      case "pickup-project-mismatch":
+        throw new HttpError(400, "Pickup task does not belong to the project")
+      case "delivery-project-mismatch":
+        throw new HttpError(400, "Delivery task does not belong to the project")
+    }
   } catch (error) {
     next(error)
   }

@@ -83,6 +83,14 @@ const taskPatchRequestSchema = z
   })
   .openapi("TaskPatchRequest");
 
+const projectTaskPairRequestSchema = z
+  .object({
+    projectId: z.string().min(1),
+    pickupTaskId: z.string().min(1),
+    deliveryTaskId: z.string().min(1),
+  })
+  .openapi("ProjectTaskPairRequest");
+
 const taskFieldPatchRequestSchema = z
   .object({
     id: z.string().min(1).optional(),
@@ -310,6 +318,80 @@ registry.registerPath({
     },
     404: {
       description: "Project not found",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+  },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/projects/tasks/{id}",
+  tags: ["Project"],
+  request: {
+    params: z.object({
+      id: z.string().min(1),
+    }),
+  },
+  responses: {
+    200: {
+      description: "Task by id with fields, comments, events and related data",
+      content: {
+        "application/json": {
+          schema: z.unknown(),
+        },
+      },
+    },
+    404: {
+      description: "Task not found",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+  },
+});
+
+registry.registerPath({
+  method: "post",
+  path: "/projects/task-pair",
+  tags: ["Project"],
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: projectTaskPairRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Project with selected pickup and delivery tasks",
+      content: {
+        "application/json": {
+          schema: z.object({
+            project: z.unknown(),
+            pickup: z.unknown(),
+            delivery: z.unknown(),
+          }),
+        },
+      },
+    },
+    400: {
+      description: "Invalid task pair payload or project mismatch",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+    404: {
+      description: "Project or task not found",
       content: {
         "application/json": {
           schema: defaultErrorSchema,

@@ -9,6 +9,8 @@ import {
   deleteAttachmentByIdHandler,
   getProjectByIdHandler,
   getProjectsHandler,
+  getProjectTaskPairHandler,
+  getTaskByIdHandler,
   patchInspectionByIdHandler,
   patchPortaChecklistByIdHandler,
   patchTaskByIdHandler,
@@ -22,6 +24,9 @@ import { Router } from "express"
 const router = Router()
 
 router.get("/", getProjectsHandler)
+router.get("/tasks/:id", getTaskByIdHandler)
+router.get("/task/:id", getTaskByIdHandler)
+router.post("/task-pair", getProjectTaskPairHandler)
 router.get("/:id", getProjectByIdHandler)
 router.patch("/tasks/:id", patchTaskByIdHandler)
 router.patch("/events/:id", patchTaskEventByIdHandler)
