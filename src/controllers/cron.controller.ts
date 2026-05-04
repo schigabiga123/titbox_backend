@@ -18,7 +18,16 @@ export async function runUpdateProjectsJobHandler(
       stats,
     })
   } catch (error) {
-    next(error)
+    const message = error instanceof Error ? error.message : String(error)
+
+    console.error("update-projects cron job failed", error)
+
+    res.status(200).json({
+      ok: false,
+      job: "update-projects",
+      triggeredAt: new Date().toISOString(),
+      error: message,
+    })
   }
 }
 
