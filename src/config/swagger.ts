@@ -234,6 +234,25 @@ const notificationLogResponseSchema = z
   })
   .openapi("NotificationLogResponse");
 
+const manualPushRequestSchema = z
+  .object({
+    title: z.string().min(1).optional(),
+    body: z.string().min(1),
+    taskId: z.string().min(1).optional(),
+  })
+  .openapi("ManualPushRequest");
+
+const manualPushResponseSchema = z
+  .object({
+    ok: z.boolean(),
+    userId: z.string(),
+    notification: z.object({
+      title: z.string(),
+      body: z.string(),
+    }),
+  })
+  .openapi("ManualPushResponse");
+
 registry.registerPath({
   method: "get",
   path: "/projects",
@@ -921,6 +940,42 @@ registry.registerPath({
     },
     400: {
       description: "Invalid user id",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+  },
+});
+
+registry.registerPath({
+  method: "post",
+  path: "/notifications/{userId}/push",
+  tags: ["Notification"],
+  request: {
+    params: z.object({
+      userId: z.string().min(1),
+    }),
+    body: {
+      content: {
+        "application/json": {
+          schema: manualPushRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      description: "Manual push queued for user",
+      content: {
+        "application/json": {
+          schema: manualPushResponseSchema,
+        },
+      },
+    },
+    400: {
+      description: "Invalid manual push payload",
       content: {
         "application/json": {
           schema: defaultErrorSchema,

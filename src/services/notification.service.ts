@@ -27,6 +27,7 @@ type LogNotificationInput = {
 
 const PUSH_ENABLED = process.env.PUSH_ENABLED === "true"
 const prisma = new PrismaClient()
+const MANUAL_PUSH_TASK_ID = "manual-push"
 const PUSH_ALLOWED_USER_IDS = new Set(
   (process.env.PUSH_ALLOWED_USER_IDS ?? "")
     .split(",")
@@ -289,6 +290,14 @@ export async function sendPushToUsers(
       })
     }
   }
+}
+
+export async function sendManualPushToUser(
+  userId: string,
+  notification: NotificationPayload,
+  taskId = MANUAL_PUSH_TASK_ID
+) {
+  await sendPushToUsers(taskId, [userId], notification)
 }
 
 type SendCommentCreatedNotificationInput = {
