@@ -27,6 +27,11 @@ type LogNotificationInput = {
 
 const PUSH_ENABLED = process.env.PUSH_ENABLED === "true"
 const prisma = new PrismaClient()
+const notificationLogRepo = (prisma as any).notificationLog as {
+  create(args: unknown): Promise<unknown>
+  findMany(args: unknown): Promise<unknown>
+  update(args: unknown): Promise<unknown>
+}
 const MANUAL_PUSH_TASK_ID = "manual-push"
 const PUSH_ALLOWED_USER_IDS = new Set(
   (process.env.PUSH_ALLOWED_USER_IDS ?? "")
@@ -175,7 +180,7 @@ async function logNotification(input: LogNotificationInput) {
 
 async function logNotificationToDb(input: LogNotificationInput) {
   try {
-    await prisma.notificationLog.create({
+    await notificationLogRepo.create({
       data: {
         userId: input.userId,
         notification: input.notification,
@@ -192,12 +197,27 @@ async function logNotificationToDb(input: LogNotificationInput) {
 }
 
 export async function getNotificationsByUserId(userId: string) {
-  return prisma.notificationLog.findMany({
+  return notificationLogRepo.findMany({
     where: {
       userId,
     },
     orderBy: {
       createdAt: "desc",
+    },
+  })
+}
+
+type UpdateNotificationByIdInput = {
+  dateOfSeen?: Date | null
+}
+
+export async function updateNotificationById(id: string, input: UpdateNotificationByIdInput) {
+  return notificationLogRepo.update({
+    where: {
+      id,
+    },
+    data: {
+      ...(input.dateOfSeen !== undefined ? { dateOfSeen: input.dateOfSeen } : {}),
     },
   })
 }

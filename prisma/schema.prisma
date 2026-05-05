@@ -134,6 +134,7 @@ model StartDeadlineReminderLog {
 model NotificationLog {
   id           String   @id @default(uuid())
   createdAt    DateTime @default(now())
+  dateOfSeen   DateTime?
   userId       String
   notification Json
   taskId       String
@@ -143,6 +144,7 @@ model NotificationLog {
   deadline     Boolean  @default(false)
 
   @@index([createdAt])
+  @@index([dateOfSeen])
   @@index([userId])
   @@index([taskId])
   @@index([subTaskId])

@@ -232,6 +232,7 @@ const notificationLogResponseSchema = z
   .object({
     id: z.string(),
     createdAt: z.string().datetime(),
+    dateOfSeen: z.string().datetime().nullable(),
     userId: z.string(),
     notification: z.unknown(),
     taskId: z.string(),
@@ -241,6 +242,12 @@ const notificationLogResponseSchema = z
     deadline: z.boolean(),
   })
   .openapi("NotificationLogResponse");
+
+const patchNotificationRequestSchema = z
+  .object({
+    dateOfSeen: z.string().datetime().nullable(),
+  })
+  .openapi("PatchNotificationRequest");
 
 const manualPushRequestSchema = z
   .object({
@@ -1058,6 +1065,50 @@ registry.registerPath({
     },
     400: {
       description: "Invalid manual push payload",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+  },
+});
+
+registry.registerPath({
+  method: "patch",
+  path: "/notifications/{id}",
+  tags: ["Notification"],
+  request: {
+    params: z.object({
+      id: z.string().min(1),
+    }),
+    body: {
+      content: {
+        "application/json": {
+          schema: patchNotificationRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Updated notification log",
+      content: {
+        "application/json": {
+          schema: notificationLogResponseSchema,
+        },
+      },
+    },
+    400: {
+      description: "Invalid notification patch payload",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+    404: {
+      description: "Notification not found",
       content: {
         "application/json": {
           schema: defaultErrorSchema,
