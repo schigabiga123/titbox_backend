@@ -28,7 +28,7 @@ type LogNotificationInput = {
 const PUSH_ENABLED = process.env.PUSH_ENABLED === "true"
 const prisma = new PrismaClient()
 const notificationLogRepo = (prisma as any).notificationLog as {
-  create(args: unknown): Promise<unknown>
+  create(args: unknown): Promise<{ id: string }>
   findMany(args: unknown): Promise<unknown>
   update(args: unknown): Promise<unknown>
 }
@@ -180,7 +180,7 @@ async function logNotification(input: LogNotificationInput) {
 
 async function logNotificationToDb(input: LogNotificationInput) {
   try {
-    await notificationLogRepo.create({
+    return await notificationLogRepo.create({
       data: {
         userId: input.userId,
         notification: input.notification,
@@ -193,6 +193,31 @@ async function logNotificationToDb(input: LogNotificationInput) {
     })
   } catch (error) {
     console.error(`Failed to log notification to database for user '${input.userId}'`, error)
+    return null
+  }
+}
+
+async function updateNotificationPushStatus(
+  notificationLogId: string | null,
+  success: boolean,
+  failureReason?: string | null
+) {
+  if (!notificationLogId) {
+    return
+  }
+
+  try {
+    await notificationLogRepo.update({
+      where: {
+        id: notificationLogId,
+      },
+      data: {
+        success,
+        failureReason: success ? null : failureReason ?? "Unknown push delivery failure",
+      },
+    })
+  } catch (error) {
+    console.error(`Failed to update notification push status '${notificationLogId}'`, error)
   }
 }
 
@@ -235,7 +260,7 @@ export async function sendPushToUsers(
       continue
     }
 
-    await logNotificationToDb({
+    const notificationLog = await logNotificationToDb({
       userId,
       notification,
       taskId,
@@ -244,12 +269,23 @@ export async function sendPushToUsers(
       finished: options.finished,
       deadline: options.deadline,
     })
+    const notificationLogId = notificationLog?.id ?? null
 
     if (!firebaseInitialized) {
+      await updateNotificationPushStatus(
+        notificationLogId,
+        false,
+        "Firebase admin SDK is not initialized"
+      )
       continue
     }
 
     if (!shouldSendPushToUser(userId)) {
+      await updateNotificationPushStatus(
+        notificationLogId,
+        false,
+        PUSH_ENABLED ? "User is not allowed by PUSH_ALLOWED_USER_IDS" : "Push sending is disabled"
+      )
       continue
     }
 
@@ -257,6 +293,7 @@ export async function sendPushToUsers(
     const userSnap = await userRef.get()
 
     if (!userSnap.exists) {
+      await updateNotificationPushStatus(notificationLogId, false, "Firebase user not found")
       continue
     }
 
@@ -267,7 +304,7 @@ export async function sendPushToUsers(
         )
       : []
 
-    await logNotification({
+    /*await logNotification({
       userId,
       notification,
       taskId,
@@ -275,26 +312,40 @@ export async function sendPushToUsers(
       commentId: options.commentId,
       finished: options.finished,
       deadline: options.deadline,
-    })
+    })*/
 
     if (options.exceptPush === true) {
+      await updateNotificationPushStatus(notificationLogId, false, "Push sending was skipped")
       continue
     }
 
     if (tokens.length === 0) {
+      await updateNotificationPushStatus(notificationLogId, false, "User has no FCM tokens")
       continue
     }
 
-    const response = await admin.messaging().sendEachForMulticast({
-      tokens,
-      notification,
-      data: buildDataPayload(notification, taskId, options),
-    })
+    let response: admin.messaging.BatchResponse
+    try {
+      response = await admin.messaging().sendEachForMulticast({
+        tokens,
+        notification,
+        data: buildDataPayload(notification, taskId, options),
+      })
+    } catch (error) {
+      await updateNotificationPushStatus(
+        notificationLogId,
+        false,
+        error instanceof Error ? error.message : String(error)
+      )
+      continue
+    }
 
     const invalidTokens: string[] = []
+    const failureReasons: string[] = []
     response.responses.forEach((result, index) => {
       if (!result.success) {
         const errorCode = result.error?.code
+        failureReasons.push(errorCode ?? result.error?.message ?? "Unknown Firebase token error")
         if (
           errorCode === "messaging/invalid-registration-token" ||
           errorCode === "messaging/registration-token-not-registered"
@@ -303,6 +354,16 @@ export async function sendPushToUsers(
         }
       }
     })
+
+    await updateNotificationPushStatus(
+      notificationLogId,
+      response.successCount > 0,
+      response.failureCount > 0
+        ? `Firebase push failed for ${response.failureCount}/${tokens.length} token(s): ${[
+            ...new Set(failureReasons),
+          ].join(", ")}`
+        : null
+    )
 
     if (invalidTokens.length > 0) {
       await userRef.update({

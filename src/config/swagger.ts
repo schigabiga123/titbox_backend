@@ -240,6 +240,8 @@ const notificationLogResponseSchema = z
     commentId: z.string().nullable(),
     finished: z.boolean(),
     deadline: z.boolean(),
+    success: z.boolean(),
+    failureReason: z.string().nullable(),
   })
   .openapi("NotificationLogResponse");
 

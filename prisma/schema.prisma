@@ -142,6 +142,8 @@ model NotificationLog {
   commentId    String?
   finished     Boolean  @default(false)
   deadline     Boolean  @default(false)
+  success      Boolean  @default(false)
+  failureReason String?
 
   @@index([createdAt])
   @@index([dateOfSeen])
