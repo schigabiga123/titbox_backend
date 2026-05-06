@@ -3,32 +3,41 @@ import { NextFunction, Request, Response } from "express"
 import { syncTasks } from "../firebase/update_projects"
 import { runStartDeadlineReminderJob } from "../jobs/start_deadline_reminder"
 
+let isUpdateProjectsJobRunning = false
+
 export async function runUpdateProjectsJobHandler(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  try {
-    const stats = await syncTasks()
+  const triggeredAt = new Date().toISOString()
 
+  if (isUpdateProjectsJobRunning) {
     res.status(200).json({
       ok: true,
       job: "update-projects",
-      triggeredAt: new Date().toISOString(),
-      stats,
+      status: "already-running",
+      triggeredAt,
     })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error)
-
-    console.error("update-projects cron job failed", error)
-
-    res.status(200).json({
-      ok: false,
-      job: "update-projects",
-      triggeredAt: new Date().toISOString(),
-      error: message,
-    })
+    return
   }
+
+  isUpdateProjectsJobRunning = true
+
+  void syncTasks()
+    .catch((error) => {
+      console.error("update-projects cron job failed", error)
+    })
+    .finally(() => {
+      isUpdateProjectsJobRunning = false
+    })
+
+  res.status(200).json({
+    ok: true,
+    job: "update-projects",
+    status: "started",
+    triggeredAt,
+  })
 }
 
 export async function runStartDeadlineReminderJobHandler(
