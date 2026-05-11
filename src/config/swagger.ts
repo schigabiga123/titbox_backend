@@ -285,6 +285,14 @@ registry.registerPath({
           example:
             "{\"szfCode\":\"SZF-123\",\"assignedUserId\":\"user-1\",\"orderBy\":\"ASC\",\"task\":{\"pickupAddressContains\":\"Budapest\",\"deliveryAddressContains\":\"Kornye\",\"taskFilter\":\"open\",\"deadlineAfter\":\"2026-03-01T00:00:00.000Z\",\"assignedUserId\":\"user-1\",\"submittedUserId\":\"user-2\",\"status\":\"doing\",\"vontatoDataContains\":\"ABC-123\",\"potkocsiDataContains\":\"XYZ-456\"}}",
         }),
+      allTask: z
+        .enum(["true", "false"])
+        .optional()
+        .openapi({
+          description:
+            "Defaults to true. When false, only projects with at least one task deadline in the last 30 days are returned. The project payload still includes its tasks according to the normal include/filter behavior.",
+          example: "false",
+        }),
     }),
   },
   responses: {

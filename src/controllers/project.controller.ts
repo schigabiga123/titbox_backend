@@ -633,6 +633,26 @@ function parsePagination(req: Request) {
   return { offset, limit }
 }
 
+function parseBooleanQueryParam(value: unknown, key: string, defaultValue: boolean) {
+  if (value === undefined) {
+    return defaultValue
+  }
+
+  if (typeof value !== "string") {
+    throw new HttpError(400, `Invalid '${key}' query param`)
+  }
+
+  if (value === "true") {
+    return true
+  }
+
+  if (value === "false") {
+    return false
+  }
+
+  throw new HttpError(400, `'${key}' must be 'true' or 'false'`)
+}
+
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0
 }
@@ -1050,10 +1070,13 @@ const portaChecklistPatchFields: Record<string, PatchFieldDefinition> = {
 export async function getProjectsHandler(req: Request, res: Response, next: NextFunction) {
   try {
     const pagination = parsePagination(req)
+    const options = {
+      allTask: parseBooleanQueryParam(req.query.allTask, "allTask", true),
+    }
     const filters = parseProjectSearchFilters(req.query.search)
     const result = filters
-      ? await searchProjects(filters, pagination)
-      : await getProjects(pagination)
+      ? await searchProjects(filters, pagination, options)
+      : await getProjects(pagination, options)
     res.json(result)
   } catch (error) {
     next(error)

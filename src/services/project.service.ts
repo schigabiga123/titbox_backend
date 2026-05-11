@@ -75,6 +75,10 @@ type PaginationInput = {
   limit: number
 }
 
+type ProjectListOptions = {
+  allTask: boolean
+}
+
 export type ProjectSearchFilters = {
   projectTitleContains?: string
   szfCode?: string
@@ -374,6 +378,14 @@ function getPortaRelatedTasks(project: any, portaNumber: 1 | 2, referenceDate = 
   return project.tasks.filter((task: any) => includedTaskIds.has(task.id))
 }
 
+function getRecentProjectTaskWhere(referenceDate = new Date()): TaskWhereInput {
+  return {
+    deadline: {
+      gte: addDays(referenceDate, -30),
+    },
+  }
+}
+
 async function findProjects(
   where: ProjectWhereInput | undefined,
   pagination: PaginationInput,
@@ -459,8 +471,19 @@ async function findProjects(
   }
 }
 
-export async function getProjects(pagination: PaginationInput) {
-  return findProjects(undefined, pagination)
+export async function getProjects(
+  pagination: PaginationInput,
+  options: ProjectListOptions
+) {
+  const where = options.allTask
+    ? undefined
+    : {
+        tasks: {
+          some: getRecentProjectTaskWhere(),
+        },
+      }
+
+  return findProjects(where, pagination)
 }
 
 export async function getProjectById(id: string) {
@@ -541,7 +564,8 @@ export async function getProjectTaskPairByIds(
 
 export async function searchProjects(
   filters: ProjectSearchFilters,
-  pagination: PaginationInput
+  pagination: PaginationInput,
+  options: ProjectListOptions
 ) {
   const deadlineOrder = filters.orderBy ?? "DESC"
   const projectAndConditions: ProjectWhereInput[] = []
@@ -555,6 +579,14 @@ export async function searchProjects(
       title: {
         contains: filters.projectTitleContains,
         mode: "insensitive",
+      },
+    })
+  }
+
+  if (!options.allTask) {
+    projectAndConditions.push({
+      tasks: {
+        some: getRecentProjectTaskWhere(),
       },
     })
   }
