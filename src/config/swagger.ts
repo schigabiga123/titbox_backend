@@ -270,6 +270,66 @@ const manualPushResponseSchema = z
   })
   .openapi("ManualPushResponse");
 
+const errorLogRequestSchema = z
+  .object({
+    url: z.string().min(1),
+    statusCode: z.number().int().nullable().optional(),
+    data: z.string().nullable().optional(),
+  })
+  .openapi("ErrorLogRequest");
+
+const errorLogResponseSchema = z
+  .object({
+    id: z.string(),
+    createdAt: z.string().datetime(),
+    userId: z.string(),
+    url: z.string(),
+    statusCode: z.number().int().nullable(),
+    data: z.string().nullable(),
+  })
+  .openapi("ErrorLogResponse");
+
+registry.registerPath({
+  method: "post",
+  path: "/error-logs",
+  tags: ["ErrorLog"],
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: errorLogRequestSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      description: "Error log created",
+      content: {
+        "application/json": {
+          schema: errorLogResponseSchema,
+        },
+      },
+    },
+    400: {
+      description: "Invalid error log payload",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+    401: {
+      description: "Missing authenticated user",
+      content: {
+        "application/json": {
+          schema: defaultErrorSchema,
+        },
+      },
+    },
+  },
+});
+
 registry.registerPath({
   method: "get",
   path: "/projects",

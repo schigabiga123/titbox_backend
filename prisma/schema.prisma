@@ -153,6 +153,19 @@ model NotificationLog {
   @@index([commentId])
 }
 
+model ErrorLog {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  userId     String
+  url        String
+  statusCode Int?
+  data       String?
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([statusCode])
+}
+
 model Comment {
   id              String   @id @default(uuid())
   taskId          String

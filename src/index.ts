@@ -7,6 +7,7 @@ import cors from "cors"
 import dotenv from "dotenv"
 import express from "express"
 import cronRoutes from "./routes/cron.routes"
+import errorLogRoutes from "./routes/error-log.routes"
 import notificationRoutes from "./routes/notification.routes"
 import projectRoutes from "./routes/project.routes"
 import { swaggerSpec } from "./config/swagger";
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/cron", requireCronSecret, cronRoutes)
+app.use("/error-logs", requireFirebaseAuth, errorLogRoutes)
 app.use("/notifications", requireFirebaseAuth, notificationRoutes)
 app.use("/projects", requireFirebaseAuth, auditMutations, projectRoutes)
 
