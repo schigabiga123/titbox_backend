@@ -23,12 +23,22 @@ export async function requireFirebaseAuth(
   res: Response,
   next: NextFunction
 ) {
+  const token = extractBearerToken(req.header("authorization"))
+
   if (!FIREBASE_AUTH_ENABLED) {
+    if (token) {
+      try {
+        const admin = ensureFirebaseAdminInitialized()
+        res.locals.firebaseUser = await admin.auth().verifyIdToken(token, true)
+      } catch {
+        next(new HttpError(401, "Invalid Firebase token"))
+        return
+      }
+    }
+
     next()
     return
   }
-
-  const token = extractBearerToken(req.header("authorization"))
 
   if (!token) {
     next(new HttpError(401, "Missing or invalid Authorization header"))
