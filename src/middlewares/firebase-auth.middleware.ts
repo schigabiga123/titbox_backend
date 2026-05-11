@@ -30,9 +30,8 @@ export async function requireFirebaseAuth(
       try {
         const admin = ensureFirebaseAdminInitialized()
         res.locals.firebaseUser = await admin.auth().verifyIdToken(token, true)
-      } catch {
-        next(new HttpError(401, "Invalid Firebase token"))
-        return
+      } catch (error) {
+        console.warn("Firebase auth is disabled; could not hydrate firebaseUser from token", error)
       }
     }
 
